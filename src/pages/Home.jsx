@@ -1,155 +1,177 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../hooks/useTheme';
-import { BookOpen, Users, Award, ChevronRight, Star, Target, Heart } from 'lucide-react';
+import { BookOpen, Users, Award, ArrowRight, Star, Play, FileText, PenTool } from 'lucide-react';
 
 const Home = () => {
-  const { isDark } = useTheme();
-
-  const teamMembers = [
-    { name: "Gaurav Sir", role: "Physics Expert", image: "/api/placeholder/150/150" },
-    { name: "Priya Ma'am", role: "Chemistry Expert", image: "/api/placeholder/150/150" },
-    { name: "Rajesh Sir", role: "Mathematics Expert", image: "/api/placeholder/150/150" },
-    { name: "Anita Ma'am", role: "Biology Expert", image: "/api/placeholder/150/150" },
-  ];
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const features = [
     {
-      icon: <BookOpen className="w-8 h-8" />,
+      icon: <FileText className="h-6 w-6" />,
       title: "Comprehensive Notes",
-      description: "Detailed chapter-wise notes for better understanding"
+      description: "Detailed study materials for every chapter",
+      color: "from-blue-500 to-blue-600"
     },
     {
-      icon: <Users className="w-8 h-8" />,
-      title: "Expert Faculty",
-      description: "Learn from experienced and qualified teachers"
+      icon: <Play className="h-6 w-6" />,
+      title: "Video Lectures",
+      description: "Interactive YouTube lectures with expert explanations",
+      color: "from-red-500 to-red-600"
     },
     {
-      icon: <Award className="w-8 h-8" />,
-      title: "Practice Papers",
-      description: "Daily Practice Problems (DPP) for exam preparation"
+      icon: <PenTool className="h-6 w-6" />,
+      title: "Daily Practice Papers",
+      description: "DPPs to enhance your problem-solving skills",
+      color: "from-green-500 to-green-600"
+    },
+    {
+      icon: <Award className="h-6 w-6" />,
+      title: "Quality Education",
+      description: "Prepared by experienced educators",
+      color: "from-purple-500 to-purple-600"
     }
   ];
 
+  const stats = [
+    { number: "2", label: "Classes", suffix: "" },
+    { number: "500+", label: "Study Materials", suffix: "" },
+    { number: "1000+", label: "Practice Questions", suffix: "" },
+    { number: "24/7", label: "Access", suffix: "" }
+  ];
+
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'}`}>
-      {/* Hero Section with Team Photo Background */}
+    <div className="min-h-screen">
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Team Photo with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <div className="w-full h-full bg-gradient-to-r from-blue-600/90 via-purple-600/80 to-pink-600/90 flex items-center justify-center">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-30">
-              {teamMembers.map((member, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 mx-auto mb-4"></div>
-                  <h3 className="text-white font-semibold text-lg">{member.name}</h3>
-                  <p className="text-white/80 text-sm">{member.role}</p>
-                </div>
-              ))}
+        {/* Background with team photo effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
+          <div className="absolute inset-0 bg-[radial-gradient(circle,_transparent_20%,_black_20.5%,_transparent_21%)_0_0/16px_16px] opacity-5"></div>
+        </div>
+
+        {/* Team Photo Mockup */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-10 dark:opacity-5">
+          <div className="relative">
+            <div className="w-96 h-64 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-3xl shadow-2xl transform rotate-3">
+              <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center">
+                <Users className="h-24 w-24 text-gray-400" />
+              </div>
             </div>
+            {/* Floating elements around team photo */}
+            <div className="absolute -top-4 -left-4 w-8 h-8 bg-yellow-400 rounded-full animate-bounce-gentle"></div>
+            <div className="absolute -bottom-4 -right-4 w-6 h-6 bg-green-400 rounded-full animate-bounce-gentle" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute top-1/2 -left-8 w-4 h-4 bg-purple-400 rounded-full animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
           </div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        {/* Content */}
+        <div className={`relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="mb-8">
-            <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6">
-              <Star className="w-5 h-5 text-yellow-400 mr-2" />
-              <span className="text-white font-medium">Premium Education Platform</span>
-            </div>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Arya<span className="text-yellow-400">Pathshala</span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Your trusted companion for Class 9th & 10th preparation with expert guidance, 
-            comprehensive notes, and practice materials.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <div className="flex items-center text-white/90">
-              <Target className="w-5 h-5 mr-2 text-green-400" />
-              <span>Board Exam Focused</span>
-            </div>
-            <div className="flex items-center text-white/90">
-              <Heart className="w-5 h-5 mr-2 text-red-400" />
-              <span>Student-Friendly Approach</span>
-            </div>
-          </div>
-
-          {/* Course Selection Cards */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <Link
-              to="/class9"
-              className="group relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <div className="text-4xl font-bold text-white mb-2">Class 9th</div>
-                <p className="text-white/80 mb-4">Foundation building with comprehensive coverage</p>
-                <div className="flex items-center text-white group-hover:translate-x-2 transition-transform duration-300">
-                  <span className="font-semibold">Start Learning</span>
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </div>
-              </div>
-            </Link>
-
-            <Link
-              to="/class10"
-              className="group relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <div className="text-4xl font-bold text-white mb-2">Class 10th</div>
-                <p className="text-white/80 mb-4">Board exam preparation with expert guidance</p>
-                <div className="flex items-center text-white group-hover:translate-x-2 transition-transform duration-300">
-                  <span className="font-semibold">Start Learning</span>
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-yellow-400/20 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-20 w-16 h-16 bg-blue-400/20 rounded-full blur-xl animate-pulse delay-500"></div>
-      </section>
-
-      {/* Features Section */}
-      <section className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>
-              Why Choose AryaPathshala?
-            </h2>
-            <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              We provide everything you need to excel in your academic journey
+            <h1 className="text-5xl md:text-7xl font-bold font-display mb-6">
+              <span className="gradient-text">Arya</span>
+              <br />
+              <span className="text-gray-800 dark:text-white">Pathshala</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+              Your gateway to academic excellence. Comprehensive study materials, 
+              engaging lectures, and daily practice for Class 9 & 10 students.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          {/* Course Selection Cards */}
+          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto mb-12">
+            <Link 
+              to="/class9" 
+              className="group relative overflow-hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-white/20"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative">
+                <div className="text-4xl mb-4">📚</div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">
+                  Class 9
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Foundation building with comprehensive study materials
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-blue-600 dark:text-blue-400 font-medium">
+                  <span>Start Learning</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </div>
+            </Link>
+
+            <Link 
+              to="/class10" 
+              className="group relative overflow-hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-white/20"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative">
+                <div className="text-4xl mb-4">🎓</div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">
+                  Class 10
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Board exam preparation with advanced concepts
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-purple-600 dark:text-purple-400 font-medium">
+                  <span>Start Learning</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-gray-600 dark:text-gray-400 font-medium">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-gray-400 dark:border-gray-600 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gray-400 dark:bg-gray-600 rounded-full mt-2 animate-pulse"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Why Choose <span className="gradient-text">Arya Pathshala?</span>
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              We provide everything you need for academic success in one comprehensive platform
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className={`group p-8 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:-translate-y-2 ${
-                  isDark
-                    ? 'bg-gray-700/50 border-gray-600 hover:border-blue-500'
-                    : 'bg-gradient-to-br from-blue-50 to-purple-50 border-gray-200 hover:border-blue-400'
-                }`}
+              <div 
+                key={index} 
+                className="group relative bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               >
-                <div className={`inline-flex p-4 rounded-xl mb-6 ${
-                  isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'
-                } group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} text-white mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   {feature.icon}
                 </div>
-                <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} leading-relaxed`}>
+                <p className="text-gray-600 dark:text-gray-300">
                   {feature.description}
                 </p>
               </div>
@@ -158,61 +180,28 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-50 to-pink-50'}`}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>
-              Meet Our Expert Team
-            </h2>
-            <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              Dedicated professionals committed to your success
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className={`group text-center p-6 rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 ${
-                  isDark ? 'bg-gray-800/50 hover:bg-gray-700/50' : 'bg-white/70 hover:bg-white'
-                } backdrop-blur-sm border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
-              >
-                <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full mx-auto mb-6 group-hover:shadow-2xl transition-shadow duration-300"></div>
-                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>
-                  {member.name}
-                </h3>
-                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} font-medium`}>
-                  {member.role}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Excel in Your Studies?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of students who have achieved success with AryaPathshala
+            Join thousands of students who have improved their grades with our comprehensive study materials
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/class9"
-              className="px-8 py-4 bg-white text-blue-600 font-bold rounded-full hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
+            <Link 
+              to="/class9" 
+              className="bg-white text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
-              Start with Class 9th
+              Start with Class 9
             </Link>
-            <Link
-              to="/class10"
-              className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105"
+            <Link 
+              to="/class10" 
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105"
             >
-              Jump to Class 10th
+              Jump to Class 10
             </Link>
           </div>
         </div>
