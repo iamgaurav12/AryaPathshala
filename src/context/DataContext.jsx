@@ -10,336 +10,137 @@ export const useData = () => {
   return context;
 };
 
-const defaultCourseData = {
-  class9: {
-    subjects: {
-      mathematics: {
-        name: "Mathematics",
-        color: "bg-blue-500",
-        icon: "📐",
-        chapters: [
-          {
-            id: 1,
-            name: "Number Systems",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "Polynomials",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Coordinate Geometry",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "Linear Equations in Two Variables",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "Introduction to Euclid's Geometry",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      },
-      science: {
-        name: "Science",
-        color: "bg-green-500",
-        icon: "🧪",
-        chapters: [
-          {
-            id: 1,
-            name: "Matter in Our Surroundings",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "Is Matter Around Us Pure",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Atoms and Molecules",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "Structure of the Atom",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "The Fundamental Unit of Life",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      },
-      socialScience: {
-        name: "Social Science",
-        color: "bg-purple-500",
-        icon: "🌍",
-        chapters: [
-          {
-            id: 1,
-            name: "The French Revolution",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "Socialism in Europe and Russian Revolution",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Nazism and the Rise of Hitler",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "Forest Society and Colonialism",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "Pastoralists in the Modern World",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      }
+const defaultData = {
+  class9: [
+    {
+      title: "Introduction to Algebra",
+      notes: "https://drive.google.com/file/d/example1",
+      dpp: "https://drive.google.com/file/d/example2",
+      lecture: "https://youtube.com/watch?v=example1"
+    },
+    {
+      title: "Linear Equations",
+      notes: "https://drive.google.com/file/d/example3",
+      dpp: "",
+      lecture: "https://youtube.com/watch?v=example2"
     }
-  },
-  class10: {
-    subjects: {
-      mathematics: {
-        name: "Mathematics",
-        color: "bg-blue-500",
-        icon: "📐",
-        chapters: [
-          {
-            id: 1,
-            name: "Real Numbers",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "Polynomials",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Pair of Linear Equations in Two Variables",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "Quadratic Equations",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "Arithmetic Progressions",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      },
-      science: {
-        name: "Science",
-        color: "bg-green-500",
-        icon: "🧪",
-        chapters: [
-          {
-            id: 1,
-            name: "Chemical Reactions and Equations",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "Acids, Bases and Salts",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Metals and Non-metals",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "Carbon and its Compounds",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "Life Processes",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      },
-      socialScience: {
-        name: "Social Science",
-        color: "bg-purple-500",
-        icon: "🌍",
-        chapters: [
-          {
-            id: 1,
-            name: "The Rise of Nationalism in Europe",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 2,
-            name: "The Nationalist Movement in Indo-China",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 3,
-            name: "Nationalism in India",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 4,
-            name: "The Making of a Global World",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          },
-          {
-            id: 5,
-            name: "The Age of Industrialisation",
-            notes: "",
-            dpp: "",
-            lecture: ""
-          }
-        ]
-      }
+  ],
+  class10: [
+    {
+      title: "Quadratic Equations",
+      notes: "https://drive.google.com/file/d/example4",
+      dpp: "https://drive.google.com/file/d/example5",
+      lecture: "https://youtube.com/watch?v=example3"
     }
-  }
+  ]
 };
 
 export const DataProvider = ({ children }) => {
-  const [courseData, setCourseData] = useState(() => {
-    const savedData = localStorage.getItem('courseData');
-    return savedData ? JSON.parse(savedData) : defaultCourseData;
-  });
+  const [coursesData, setCoursesData] = useState(defaultData);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedChapter, setSelectedChapter] = useState(null);
-
+  // Load data from localStorage on mount
   useEffect(() => {
-    localStorage.setItem('courseData', JSON.stringify(courseData));
-  }, [courseData]);
-
-  const updateChapter = (classNumber, subject, chapterId, updates) => {
-    setCourseData(prevData => {
-      const newData = { ...prevData };
-      const chapterIndex = newData[`class${classNumber}`].subjects[subject].chapters.findIndex(
-        chapter => chapter.id === chapterId
-      );
-      
-      if (chapterIndex !== -1) {
-        newData[`class${classNumber}`].subjects[subject].chapters[chapterIndex] = {
-          ...newData[`class${classNumber}`].subjects[subject].chapters[chapterIndex],
-          ...updates
-        };
+    try {
+      const savedData = localStorage.getItem('aryapathshala_courses');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        setCoursesData(parsedData);
       }
-      
+    } catch (error) {
+      console.error('Error loading courses data:', error);
+      // Use default data if there's an error
+      setCoursesData(defaultData);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Save data to localStorage whenever coursesData changes
+  useEffect(() => {
+    if (!loading) {
+      try {
+        localStorage.setItem('aryapathshala_courses', JSON.stringify(coursesData));
+      } catch (error) {
+        console.error('Error saving courses data:', error);
+      }
+    }
+  }, [coursesData, loading]);
+
+  const updateChapter = (className, chapterIndex, updatedChapter) => {
+    setCoursesData(prev => {
+      const newData = { ...prev };
+      if (!newData[className]) {
+        newData[className] = [];
+      }
+      newData[className][chapterIndex] = updatedChapter;
       return newData;
     });
   };
 
-  const addChapter = (classNumber, subject, newChapter) => {
-    setCourseData(prevData => {
-      const newData = { ...prevData };
-      const chapters = newData[`class${classNumber}`].subjects[subject].chapters;
-      const newId = Math.max(...chapters.map(ch => ch.id), 0) + 1;
-      
-      newData[`class${classNumber}`].subjects[subject].chapters.push({
-        id: newId,
-        name: newChapter.name,
-        notes: newChapter.notes || "",
-        dpp: newChapter.dpp || "",
-        lecture: newChapter.lecture || ""
-      });
-      
+  const addChapter = (className, newChapter) => {
+    setCoursesData(prev => {
+      const newData = { ...prev };
+      if (!newData[className]) {
+        newData[className] = [];
+      }
+      newData[className].push(newChapter);
       return newData;
     });
   };
 
-  const deleteChapter = (classNumber, subject, chapterId) => {
-    setCourseData(prevData => {
-      const newData = { ...prevData };
-      newData[`class${classNumber}`].subjects[subject].chapters = 
-        newData[`class${classNumber}`].subjects[subject].chapters.filter(
-          chapter => chapter.id !== chapterId
-        );
-      
+  const deleteChapter = (className, chapterIndex) => {
+    setCoursesData(prev => {
+      const newData = { ...prev };
+      if (newData[className]) {
+        newData[className].splice(chapterIndex, 1);
+      }
       return newData;
     });
+  };
+
+  const getChaptersByClass = (className) => {
+    return coursesData[className] || [];
+  };
+
+  const resetData = () => {
+    setCoursesData(defaultData);
+    localStorage.removeItem('aryapathshala_courses');
+  };
+
+  const exportData = () => {
+    const dataStr = JSON.stringify(coursesData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = 'aryapathshala_courses.json';
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const importData = (jsonData) => {
+    try {
+      const parsedData = JSON.parse(jsonData);
+      setCoursesData(parsedData);
+      return true;
+    } catch (error) {
+      console.error('Error importing data:', error);
+      return false;
+    }
   };
 
   const value = {
-    courseData,
-    selectedChapter,
-    setSelectedChapter,
+    coursesData,
+    loading,
     updateChapter,
     addChapter,
-    deleteChapter
+    deleteChapter,
+    getChaptersByClass,
+    resetData,
+    exportData,
+    importData
   };
 
   return (

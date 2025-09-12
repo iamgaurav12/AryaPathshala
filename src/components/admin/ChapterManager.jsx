@@ -1,550 +1,299 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { useData } from '../../context/DataContext';
 import { 
+  ArrowLeft, 
   Plus, 
   Edit, 
   Trash2, 
-  Save, 
-  X, 
+  FileText, 
+  Video, 
   BookOpen, 
-  ArrowLeft,
-  Search,
-  Filter,
-  MoreVertical,
-  Copy,
-  Eye,
-  CheckCircle,
-  AlertTriangle
+  Save,
+  X,
+  ExternalLink
 } from 'lucide-react';
-import { ThemeContext } from '../../context/ThemeContext';
-import { DataContext } from '../../context/DataContext';
 
-const ChapterManager = ({ onBack }) => {
-  const { theme } = useContext(ThemeContext);
-  const { coursesData, updateCourseData } = useContext(DataContext);
-  const [selectedClass, setSelectedClass] = useState('9');
-  const [searchTerm, setSearchTerm] = useState('');
+const ChapterManager = ({ selectedClass, onBack }) => {
+  const { coursesData, updateChapter, addChapter, deleteChapter } = useData();
   const [editingChapter, setEditingChapter] = useState(null);
-  const [newChapter, setNewChapter] = useState({
-    name: '',
-    description: '',
-    notesLink: '',
-    dppLink: '',
-    lectureLink: '',
-    duration: '',
-    rating: '4.5'
-  });
   const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    notes: '',
+    dpp: '',
+    lecture: ''
+  });
 
-  const currentCourse = coursesData[selectedClass] || { chapters: [] };
-  const chapters = currentCourse.chapters || [];
+  const className = `class${selectedClass}`;
+  const chapters = coursesData[className] || [];
 
-  const filteredChapters = chapters.filter(chapter =>
-    chapter.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleEdit = (chapter, index) => {
+    setEditingChapter(index);
+    setFormData({
+      title: chapter.title || '',
+      notes: chapter.notes || '',
+      dpp: chapter.dpp || '',
+      lecture: chapter.lecture || ''
+    });
+  };
 
-  const handleAddChapter = () => {
-    if (!newChapter.name.trim()) {
-      alert('Chapter name is required!');
-      return;
+  const handleSave = () => {
+    if (editingChapter !== null) {
+      updateChapter(className, editingChapter, formData);
+      setEditingChapter(null);
+    } else {
+      addChapter(className, formData);
+      setShowAddForm(false);
     }
-
-    const updatedChapters = [...chapters, {
-      ...newChapter,
-      id: Date.now().toString(),
-      students: '500+'
-    }];
-
-    updateCourseData(selectedClass, {
-      ...currentCourse,
-      chapters: updatedChapters
-    });
-
-    setNewChapter({
-      name: '',
-      description: '',
-      notesLink: '',
-      dppLink: '',
-      lectureLink: '',
-      duration: '',
-      rating: '4.5'
-    });
-    setShowAddForm(false);
+    resetForm();
   };
 
-  const handleEditChapter = (chapter) => {
-    setEditingChapter({ ...chapter });
-  };
-
-  const handleUpdateChapter = () => {
-    const updatedChapters = chapters.map(chapter =>
-      chapter.id === editingChapter.id ? editingChapter : chapter
-    );
-
-    updateCourseData(selectedClass, {
-      ...currentCourse,
-      chapters: updatedChapters
-    });
-
+  const handleCancel = () => {
     setEditingChapter(null);
+    setShowAddForm(false);
+    resetForm();
   };
 
-  const handleDeleteChapter = (chapterId) => {
+  const handleDelete = (index) => {
     if (window.confirm('Are you sure you want to delete this chapter?')) {
-      const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
-      
-      updateCourseData(selectedClass, {
-        ...currentCourse,
-        chapters: updatedChapters
-      });
+      deleteChapter(className, index);
     }
   };
 
-  const handleDuplicateChapter = (chapter) => {
-    const duplicatedChapter = {
-      ...chapter,
-      id: Date.now().toString(),
-      name: chapter.name + ' (Copy)'
-    };
-
-    const updatedChapters = [...chapters, duplicatedChapter];
-    
-    updateCourseData(selectedClass, {
-      ...currentCourse,
-      chapters: updatedChapters
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      notes: '',
+      dpp: '',
+      lecture: ''
     });
   };
 
-  const ChapterForm = ({ chapter, onChange, onSave, onCancel, title }) => (
-    <div className={`
-      p-6 rounded-xl border
-      ${theme === 'dark' 
-        ? 'bg-gray-800/50 border-gray-700' 
-        : 'bg-white border-gray-200 shadow-lg'
-      }
-    `}>
-      <h3 className={`text-lg font-semibold mb-4 ${
-        theme === 'dark' ? 'text-white' : 'text-gray-900'
-      }`}>
-        {title}
-      </h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="md:col-span-2">
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Chapter Name *
-          </label>
-          <input
-            type="text"
-            value={chapter.name}
-            onChange={(e) => onChange({ ...chapter, name: e.target.value })}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="Enter chapter name"
-            required
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Description
-          </label>
-          <textarea
-            value={chapter.description}
-            onChange={(e) => onChange({ ...chapter, description: e.target.value })}
-            rows={3}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="Brief description of the chapter"
-          />
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Notes Link (Google Drive)
-          </label>
-          <input
-            type="url"
-            value={chapter.notesLink}
-            onChange={(e) => onChange({ ...chapter, notesLink: e.target.value })}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="https://drive.google.com/..."
-          />
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            DPP Link (Google Drive)
-          </label>
-          <input
-            type="url"
-            value={chapter.dppLink}
-            onChange={(e) => onChange({ ...chapter, dppLink: e.target.value })}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="https://drive.google.com/..."
-          />
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Lecture Link (YouTube)
-          </label>
-          <input
-            type="url"
-            value={chapter.lectureLink}
-            onChange={(e) => onChange({ ...chapter, lectureLink: e.target.value })}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="https://youtube.com/..."
-          />
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Duration
-          </label>
-          <input
-            type="text"
-            value={chapter.duration}
-            onChange={(e) => onChange({ ...chapter, duration: e.target.value })}
-            className={`
-              w-full px-4 py-2 rounded-lg border transition-colors
-              ${theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-              }
-            `}
-            placeholder="e.g., 2-3 hours"
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end space-x-3 mt-6">
-        <button
-          onClick={onCancel}
-          className={`
-            px-4 py-2 rounded-lg border transition-colors
-            ${theme === 'dark' 
-              ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-            }
-          `}
-        >
-          <X className="w-4 h-4 inline mr-2" />
-          Cancel
-        </button>
-        <button
-          onClick={onSave}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          <Save className="w-4 h-4 inline mr-2" />
-          Save Chapter
-        </button>
-      </div>
-    </div>
-  );
-
-  const ChapterCard = ({ chapter, onEdit, onDelete, onDuplicate }) => (
-    <div className={`
-      p-4 rounded-lg border transition-all hover:shadow-md
-      ${theme === 'dark' 
-        ? 'bg-gray-800/30 border-gray-700 hover:bg-gray-800/50' 
-        : 'bg-white border-gray-200 hover:shadow-lg'
-      }
-    `}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <h4 className={`font-semibold mb-1 ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>
-            {chapter.name}
-          </h4>
-          <p className={`text-sm ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            {chapter.description || 'No description provided'}
-          </p>
-        </div>
-
-        <div className="relative group">
-          <button className={`
-            p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700
-            ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}
-          `}>
-            <MoreVertical className="w-4 h-4" />
-          </button>
-
-          <div className={`
-            absolute right-0 top-8 w-48 py-2 rounded-lg border shadow-lg z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all
-            ${theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
-            }
-          `}>
-            <button
-              onClick={() => onEdit(chapter)}
-              className={`
-                w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2
-                ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}
-              `}
-            >
-              <Edit className="w-4 h-4" />
-              <span>Edit</span>
-            </button>
-            <button
-              onClick={() => onDuplicate(chapter)}
-              className={`
-                w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2
-                ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}
-              `}
-            >
-              <Copy className="w-4 h-4" />
-              <span>Duplicate</span>
-            </button>
-            <button
-              onClick={() => onDelete(chapter.id)}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 flex items-center space-x-2"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span>Delete</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Resource Status */}
-      <div className="flex items-center space-x-4 text-xs mb-3">
-        <div className={`flex items-center space-x-1 ${
-          chapter.notesLink ? 'text-green-600' : 'text-yellow-600'
-        }`}>
-          {chapter.notesLink ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
-          <span>Notes</span>
-        </div>
-        <div className={`flex items-center space-x-1 ${
-          chapter.dppLink ? 'text-green-600' : 'text-yellow-600'
-        }`}>
-          {chapter.dppLink ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
-          <span>DPP</span>
-        </div>
-        <div className={`flex items-center space-x-1 ${
-          chapter.lectureLink ? 'text-green-600' : 'text-yellow-600'
-        }`}>
-          {chapter.lectureLink ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
-          <span>Video</span>
-        </div>
-      </div>
-
-      {/* Metadata */}
-      <div className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
-        Duration: {chapter.duration || 'Not set'} • Rating: {chapter.rating || '4.5'} • Students: {chapter.students || '500+'}
-      </div>
-    </div>
-  );
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   return (
-    <div className={`min-h-screen ${
-      theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
+    <div className="space-y-6">
       {/* Header */}
-      <div className={`
-        border-b sticky top-0 z-10 backdrop-blur-sm
-        ${theme === 'dark' 
-          ? 'bg-gray-900/95 border-gray-700' 
-          : 'bg-white/95 border-gray-200'
-        }
-      `}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={onBack}
-                className={`
-                  p-2 rounded-lg transition-colors
-                  ${theme === 'dark' 
-                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
-                    : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
-                  }
-                `}
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={onBack}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>Back to Classes</span>
+          </button>
+          <div className="h-6 border-l border-gray-300 dark:border-gray-600"></div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Class {selectedClass} - Chapter Management
+          </h2>
+        </div>
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+        >
+          <Plus className="h-5 w-5" />
+          <span>Add Chapter</span>
+        </button>
+      </div>
+
+      {/* Add/Edit Form */}
+      {(showAddForm || editingChapter !== null) && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              {editingChapter !== null ? 'Edit Chapter' : 'Add New Chapter'}
+            </h3>
+            <button
+              onClick={handleCancel}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Chapter Title
+              </label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                placeholder="Enter chapter title"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <h1 className={`text-2xl font-bold ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
-                  Chapter Manager
-                </h1>
-                <p className={`text-sm ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  Add, edit, and manage chapters for your courses
-                </p>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <FileText className="inline h-4 w-4 mr-1" />
+                  Notes Link (Google Drive)
+                </label>
+                <input
+                  type="url"
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder="https://drive.google.com/..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <BookOpen className="inline h-4 w-4 mr-1" />
+                  DPP Link (Google Drive)
+                </label>
+                <input
+                  type="url"
+                  value={formData.dpp}
+                  onChange={(e) => setFormData({ ...formData, dpp: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder="https://drive.google.com/..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Video className="inline h-4 w-4 mr-1" />
+                  Lecture Link (YouTube)
+                </label>
+                <input
+                  type="url"
+                  value={formData.lecture}
+                  onChange={(e) => setFormData({ ...formData, lecture: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder="https://youtube.com/..."
+                />
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              {/* Class Selector */}
-              <select
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-                className={`
-                  px-4 py-2 rounded-lg border transition-colors
-                  ${theme === 'dark' 
-                    ? 'bg-gray-800 border-gray-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                  }
-                `}
-              >
-                <option value="9">Class 9</option>
-                <option value="10">Class 10</option>
-              </select>
-
+            <div className="flex space-x-3 pt-4">
               <button
-                onClick={() => setShowAddForm(true)}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
+                onClick={handleSave}
+                disabled={!formData.title.trim()}
+                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors"
               >
-                <Plus className="w-4 h-4" />
-                <span>Add Chapter</span>
+                <Save className="h-4 w-4" />
+                <span>Save Chapter</span>
+              </button>
+              <button
+                onClick={handleCancel}
+                className="flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                <X className="h-4 w-4" />
+                <span>Cancel</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Add Chapter Form */}
-        {showAddForm && (
-          <div className="mb-8">
-            <ChapterForm
-              chapter={newChapter}
-              onChange={setNewChapter}
-              onSave={handleAddChapter}
-              onCancel={() => setShowAddForm(false)}
-              title="Add New Chapter"
-            />
-          </div>
-        )}
-
-        {/* Edit Chapter Form */}
-        {editingChapter && (
-          <div className="mb-8">
-            <ChapterForm
-              chapter={editingChapter}
-              onChange={setEditingChapter}
-              onSave={handleUpdateChapter}
-              onCancel={() => setEditingChapter(null)}
-              title="Edit Chapter"
-            />
-          </div>
-        )}
-
-        {/* Search and Filter */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="relative flex-1 max-w-md">
-            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
-              theme === 'dark' ? 'text-gray-400' : 'text-gray-400'
-            }`} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search chapters..."
-              className={`
-                w-full pl-10 pr-4 py-2 rounded-lg border transition-colors
-                ${theme === 'dark' 
-                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' 
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                }
-              `}
-            />
-          </div>
-
-          <div className={`text-sm ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            {filteredChapters.length} chapter{filteredChapters.length !== 1 ? 's' : ''} found
-          </div>
+      {/* Chapters List */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Chapters ({chapters.length})
+          </h3>
         </div>
 
-        {/* Chapters Grid */}
-        {filteredChapters.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredChapters.map((chapter) => (
-              <ChapterCard
-                key={chapter.id}
-                chapter={chapter}
-                onEdit={handleEditChapter}
-                onDelete={handleDeleteChapter}
-                onDuplicate={handleDuplicateChapter}
-              />
-            ))}
+        {chapters.length === 0 ? (
+          <div className="p-12 text-center">
+            <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No chapters yet
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+              Start by adding your first chapter for Class {selectedClass}.
+            </p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Add First Chapter
+            </button>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <BookOpen className={`w-16 h-16 mx-auto mb-4 ${
-              theme === 'dark' ? 'text-gray-600' : 'text-gray-400'
-            }`} />
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-            }`}>
-              {searchTerm ? 'No chapters found' : 'No chapters yet'}
-            </h3>
-            <p className={`text-sm mb-6 ${
-              theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
-            }`}>
-              {searchTerm 
-                ? 'Try adjusting your search terms' 
-                : 'Start by adding your first chapter for this class'
-              }
-            </p>
-            {!searchTerm && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Add Your First Chapter
-              </button>
-            )}
+          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            {chapters.map((chapter, index) => (
+              <div key={index} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                      {chapter.title}
+                    </h4>
+                    
+                    <div className="flex flex-wrap gap-3">
+                      {chapter.notes && (
+                        <a
+                          href={chapter.notes}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-2 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm transition-colors"
+                        >
+                          <FileText className="h-4 w-4" />
+                          <span>Notes</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                      
+                      {chapter.dpp && (
+                        <a
+                          href={chapter.dpp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-2 bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm transition-colors"
+                        >
+                          <BookOpen className="h-4 w-4" />
+                          <span>DPP</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                      
+                      {chapter.lecture && (
+                        <a
+                          href={chapter.lecture}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-2 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-700 dark:text-red-300 px-3 py-1 rounded-full text-sm transition-colors"
+                        >
+                          <Video className="h-4 w-4" />
+                          <span>Lecture</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2 ml-4">
+                    <button
+                      onClick={() => handleEdit(chapter, index)}
+                      className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                      title="Edit chapter"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(index)}
+                      className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      title="Delete chapter"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
