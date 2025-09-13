@@ -14,7 +14,7 @@ export const ROUTES = {
   HOME: '/',
   CLASS_9: '/class-9',
   CLASS_10: '/class-10',
-  ADMIN_LOGIN: '/gaurav',
+  ADMIN_LOGIN: '/82104077619352395638gaurav',
   ADMIN_PANEL: '/:password',
   ABOUT: '/about',
   CONTACT: '/contact',
@@ -346,7 +346,7 @@ export const DEFAULT_DATA = {
       subjects: ['Mathematics', 'Physics'],
       experience: '5+ years',
       education: 'M.Sc. Mathematics',
-      image: '/assets/images/team/gaurav.jpg'
+      image: '/assets/images/team/82104077619352395638gaurav.jpg'
     },
     {
       id: 2,

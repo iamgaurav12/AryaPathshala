@@ -26,7 +26,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/class9" element={<Class9 />} />
                   <Route path="/class10" element={<Class10 />} />
-                  <Route path="/gaurav" element={<AdminLogin />} />
+                  <Route path="/82104077619352395638gaurav" element={<AdminLogin />} />
                   <Route 
                     path="/admin/:password" 
                     element={

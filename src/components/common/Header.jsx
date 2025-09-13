@@ -11,7 +11,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActivePage = (path) => location.pathname === path;
-  const isAdminPage = location.pathname.includes('admin') || location.pathname === '/gaurav' || (location.pathname.startsWith('/') && location.pathname.length > 1 && location.pathname !== '/class9' && location.pathname !== '/class10');
+  const isAdminPage = location.pathname.includes('admin') || location.pathname === '/82104077619352395638gaurav' || (location.pathname.startsWith('/') && location.pathname.length > 1 && location.pathname !== '/class9' && location.pathname !== '/class10');
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20 transition-all duration-300">

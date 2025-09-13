@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Check if user is authenticated and password matches
   if (!isAuthenticated || !isValidPassword(password)) {
-    return <Navigate to="/gaurav" replace />;
+    return <Navigate to="/82104077619352395638gaurav" replace />;
   }
 
   return children;

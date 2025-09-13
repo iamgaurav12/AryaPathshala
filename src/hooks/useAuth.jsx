@@ -98,7 +98,7 @@ const useAuth = () => {
         // Session expired
         setLocalSession(null);
         setLocalError('Session expired. Please login again.');
-        navigate('/gaurav');
+        navigate('/82104077619352395638gaurav');
       } else if (remainingTime <= authConfig.sessionWarningTime && !sessionWarning) {
         // Show session warning
         setSessionWarning(true);
@@ -184,7 +184,7 @@ const useAuth = () => {
 
       // Navigate to admin panel
       const currentPath = window.location.pathname;
-      if (currentPath.includes('/gaurav')) {
+      if (currentPath.includes('/82104077619352395638gaurav')) {
         navigate(`/${password}`);
       }
 
@@ -200,7 +200,7 @@ const useAuth = () => {
   }, [contextAuth, localAttempts, localLockout, authConfig, setLocalSession, setLocalAttempts, setLocalLockout, navigate]);
 
   // Logout function
-  const logout = useCallback(async (redirectTo = '/gaurav') => {
+  const logout = useCallback(async (redirectTo = '/82104077619352395638gaurav') => {
     if (contextAuth?.logout) {
       return await contextAuth.logout();
     }
@@ -299,7 +299,7 @@ const useAuth = () => {
   }, [contextAuth, isAuthenticated, user]);
 
   // Route protection
-  const requireAuth = useCallback((redirectTo = '/gaurav') => {
+  const requireAuth = useCallback((redirectTo = '/82104077619352395638gaurav') => {
     if (!isAuthenticated) {
       navigate(redirectTo);
       return false;
@@ -308,7 +308,7 @@ const useAuth = () => {
   }, [isAuthenticated, navigate]);
 
   // Protected route wrapper
-  const withAuthGuard = useCallback((component, requiredPermission = null, redirectTo = '/gaurav') => {
+  const withAuthGuard = useCallback((component, requiredPermission = null, redirectTo = '/82104077619352395638gaurav') => {
     if (!isAuthenticated) {
       navigate(redirectTo);
       return null;

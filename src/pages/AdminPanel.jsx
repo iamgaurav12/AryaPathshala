@@ -41,7 +41,7 @@ const AdminPanel = () => {
   // Verify authentication
   useEffect(() => {
     if (!isAuthenticated || password !== currentPassword) {
-      navigate('/gaurav', { replace: true });
+      navigate('/82104077619352395638gaurav', { replace: true });
     }
   }, [isAuthenticated, password, currentPassword, navigate]);
 
