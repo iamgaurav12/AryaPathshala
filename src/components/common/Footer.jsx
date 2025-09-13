@@ -53,12 +53,7 @@ const Footer = () => {
                   Class 10 Materials
                 </a>
               </li>
-              <li>
-                <span className="text-gray-300 text-sm">Study Notes</span>
-              </li>
-              <li>
-                <span className="text-gray-300 text-sm">Practice Papers</span>
-              </li>
+              
             </ul>
           </div>
 

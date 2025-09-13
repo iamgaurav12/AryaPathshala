@@ -1,18 +1,13 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Loading from './Loading';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, currentPassword, loading } = useAuth();
   const { password } = useParams();
+  const { isAuthenticated, isValidPassword } = useAuth();
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  // Check if user is authenticated and password matches the route
-  if (!isAuthenticated || currentPassword !== password) {
+  // Check if user is authenticated and password matches
+  if (!isAuthenticated || !isValidPassword(password)) {
     return <Navigate to="/gaurav" replace />;
   }
 

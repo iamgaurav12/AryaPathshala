@@ -1,812 +1,372 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useData } from '../context/DataContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLocalStorageTheme, useLocalStorageObject } from '../hooks/useLocalStorage';
+import AdminDashboard from '../components/admin/AdminDashboard';
+import CourseSelector from '../components/admin/CourseSelector';
+import ChapterManager from '../components/admin/ChapterManager';
 import { 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  Save, 
-  X, 
+  LogOut, 
+  Home, 
+  Settings, 
   BookOpen, 
-  FileText, 
-  Video,
-  ExternalLink,
-  ChevronDown,
-  ChevronRight,
-  Sun,
-  Moon,
-  LogOut,
-  Check,
-  AlertCircle
+  Menu, 
+  X,
+  User,
+  Clock,
+  Shield,
+  Activity
 } from 'lucide-react';
 
 const AdminPanel = () => {
+  const [selectedView, setSelectedView] = useState('dashboard');
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  
+  const { logout, isAuthenticated, currentPassword } = useAuth();
+  const { courses, lastUpdated } = useData();
   const navigate = useNavigate();
   const { password } = useParams();
-  
-  // Use specialized theme hook
-  const [theme, setTheme, themeActions] = useLocalStorageTheme('aryapathshala_theme', 'light');
-  const isDarkMode = themeActions.isDark;
-  
-  // Use localStorage hook for chapters data
-  const [chapters, setChapters, chaptersActions] = useLocalStorageObject(
-    `aryapathshala_${password}`, 
-    { '9': [], '10': [] }
-  );
-  
-  const [selectedClass, setSelectedClass] = useState('9');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingChapter, setEditingChapter] = useState(null);
-  const [expandedChapters, setExpandedChapters] = useState({});
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
-  // New chapter form state
-  const [newChapter, setNewChapter] = useState({
-    id: '',
-    title: '',
-    description: '',
-    notesLink: '',
-    dppLink: '',
-    lectureLink: '',
-    order: 1
-  });
-
-  // Initialize sample data if no data exists
+  // Update time every minute
   useEffect(() => {
-    if (!chapters['9'] || !chapters['10'] || (chapters['9'].length === 0 && chapters['10'].length === 0)) {
-      initializeSampleData();
-    }
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(timer);
   }, []);
 
-  // Apply theme to document
+  // Verify authentication
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (!isAuthenticated || password !== currentPassword) {
+      navigate('/gaurav', { replace: true });
     }
-  }, [isDarkMode]);
+  }, [isAuthenticated, password, currentPassword, navigate]);
 
-  const initializeSampleData = () => {
-    const sampleData = {
-      '9': [
-        {
-          id: '9-ch-1',
-          title: 'Number Systems',
-          description: 'Real numbers, rational and irrational numbers',
-          notesLink: 'https://drive.google.com/file/d/sample1',
-          dppLink: 'https://drive.google.com/file/d/sample1-dpp',
-          lectureLink: 'https://youtube.com/watch?v=sample1',
-          order: 1
-        },
-        {
-          id: '9-ch-2',
-          title: 'Polynomials',
-          description: 'Introduction to polynomials and their operations',
-          notesLink: 'https://drive.google.com/file/d/sample2',
-          dppLink: 'https://drive.google.com/file/d/sample2-dpp',
-          lectureLink: 'https://youtube.com/watch?v=sample2',
-          order: 2
-        }
-      ],
-      '10': [
-        {
-          id: '10-ch-1',
-          title: 'Real Numbers',
-          description: 'Euclid\'s division lemma, HCF and LCM',
-          notesLink: 'https://drive.google.com/file/d/sample3',
-          dppLink: 'https://drive.google.com/file/d/sample3-dpp',
-          lectureLink: 'https://youtube.com/watch?v=sample3',
-          order: 1
-        }
-      ]
-    };
-    setChapters(sampleData);
-  };
-
-  const showNotification = (message, type = 'success') => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: '' });
-    }, 3000);
-  };
-
-  const toggleChapterExpansion = (chapterId) => {
-    setExpandedChapters(prev => ({
-      ...prev,
-      [chapterId]: !prev[chapterId]
-    }));
-  };
-
-  const resetNewChapterForm = () => {
-    setNewChapter({
-      id: '',
-      title: '',
-      description: '',
-      notesLink: '',
-      dppLink: '',
-      lectureLink: '',
-      order: 1
-    });
-  };
-
-  const handleAddChapter = () => {
-    if (!newChapter.title.trim()) {
-      showNotification('Chapter title is required!', 'error');
-      return;
-    }
-
-    const chapterId = `${selectedClass}-ch-${Date.now()}`;
-    const chapter = {
-      ...newChapter,
-      id: chapterId,
-      order: (chapters[selectedClass] || []).length + 1
-    };
-
-    const updatedChapters = {
-      ...chapters,
-      [selectedClass]: [...(chapters[selectedClass] || []), chapter].sort((a, b) => a.order - b.order)
-    };
-
-    setChapters(updatedChapters);
-    resetNewChapterForm();
-    setShowAddForm(false);
-    showNotification('Chapter added successfully!');
-  };
-
-  const handleEditChapter = (chapter) => {
-    setEditingChapter({ ...chapter });
-    setIsEditing(true);
-  };
-
-  const handleUpdateChapter = () => {
-    if (!editingChapter.title.trim()) {
-      showNotification('Chapter title is required!', 'error');
-      return;
-    }
-
-    const updatedChapters = {
-      ...chapters,
-      [selectedClass]: (chapters[selectedClass] || []).map(ch => 
-        ch.id === editingChapter.id ? editingChapter : ch
-      )
-    };
-
-    setChapters(updatedChapters);
-    setEditingChapter(null);
-    setIsEditing(false);
-    showNotification('Chapter updated successfully!');
-  };
-
-  const handleDeleteChapter = (chapterId) => {
-    if (window.confirm('Are you sure you want to delete this chapter?')) {
-      const updatedChapters = {
-        ...chapters,
-        [selectedClass]: (chapters[selectedClass] || []).filter(ch => ch.id !== chapterId)
-      };
-      
-      setChapters(updatedChapters);
-      showNotification('Chapter deleted successfully!');
-    }
+  const handleViewChange = (view, classType = null) => {
+    setSelectedView(view);
+    setSelectedClass(classType);
+    setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
-      navigate('/gaurav');
+      logout();
+      navigate('/', { replace: true });
     }
   };
 
-  const currentChapters = chapters[selectedClass] || [];
+  const navigation = [
+    {
+      name: 'Dashboard',
+      icon: Home,
+      current: selectedView === 'dashboard',
+      onClick: () => handleViewChange('dashboard')
+    },
+    {
+      name: 'Manage Courses',
+      icon: BookOpen,
+      current: selectedView === 'courses' || selectedView === 'chapters',
+      onClick: () => handleViewChange('courses')
+    }
+  ];
+
+  const stats = {
+    totalChapters: (courses.class9?.length || 0) + (courses.class10?.length || 0),
+    class9Chapters: courses.class9?.length || 0,
+    class10Chapters: courses.class10?.length || 0,
+    totalResources: ((courses.class9?.length || 0) + (courses.class10?.length || 0)) * 3
+  };
+
+  const renderContent = () => {
+    switch (selectedView) {
+      case 'dashboard':
+        return <AdminDashboard onNavigate={handleViewChange} />;
+      case 'courses':
+        return <CourseSelector onSelectClass={handleViewChange} />;
+      case 'chapters':
+        return (
+          <ChapterManager 
+            classType={selectedClass}
+            onBack={() => handleViewChange('courses')}
+          />
+        );
+      default:
+        return <AdminDashboard onNavigate={handleViewChange} />;
+    }
+  };
+
+  const getPageTitle = () => {
+    switch (selectedView) {
+      case 'dashboard':
+        return 'Admin Dashboard';
+      case 'courses':
+        return 'Course Management';
+      case 'chapters':
+        return `${selectedClass === 'class9' ? 'Class 9' : 'Class 10'} Chapters`;
+      default:
+        return 'Admin Panel';
+    }
+  };
+
+  const getPageDescription = () => {
+    switch (selectedView) {
+      case 'dashboard':
+        return 'Overview of your educational content management system';
+      case 'courses':
+        return 'Select a class to manage chapters and resources';
+      case 'chapters':
+        return `Manage chapters, notes, lectures, and practice problems for ${selectedClass === 'class9' ? 'Class 9' : 'Class 10'}`;
+      default:
+        return 'Manage your course content and resources';
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Authentication Required
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Please log in to access the admin panel.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
-    }`}>
-      {/* Header */}
-      <header className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
-        isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className={`text-2xl font-bold ${
-                isDarkMode ? 'text-white' : 'text-gray-900'
-              }`}>
-                📚 Aryapathshala Admin
-              </div>
-              <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                isDarkMode 
-                  ? 'bg-blue-900 text-blue-200' 
-                  : 'bg-blue-100 text-blue-800'
-              }`}>
-                Admin Panel
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={themeActions.toggleTheme}
-                className={`p-2 rounded-lg transition-colors duration-200 ${
-                  isDarkMode 
-                    ? 'text-yellow-400 hover:bg-gray-700' 
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-              
-              <button
-                onClick={handleLogout}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                  isDarkMode 
-                    ? 'text-red-400 hover:bg-gray-700' 
-                    : 'text-red-600 hover:bg-red-50'
-                }`}
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Notification */}
-      {notification.show && (
-        <div className={`fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg flex items-center space-x-2 ${
-          notification.type === 'error' 
-            ? 'bg-red-500 text-white' 
-            : 'bg-green-500 text-white'
-        }`}>
-          {notification.type === 'error' ? (
-            <AlertCircle className="w-5 h-5" />
-          ) : (
-            <Check className="w-5 h-5" />
-          )}
-          <span>{notification.message}</span>
-        </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Class Selector */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className={`text-3xl font-bold ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
-            }`}>
-              Course Management
-            </h1>
-            
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              <Plus className="w-5 h-5" />
-              <span>Add New Chapter</span>
-            </button>
+      {/* Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+        
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center">
+            <Settings className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            <span className="ml-2 text-lg font-bold text-gray-900 dark:text-white">
+              Admin Panel
+            </span>
           </div>
-          
-          <div className="flex space-x-4">
-            {['9', '10'].map((classNum) => (
-              <button
-                key={classNum}
-                onClick={() => setSelectedClass(classNum)}
-                className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:-translate-y-0.5 ${
-                  selectedClass === classNum
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : isDarkMode
-                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
-                }`}
-              >
-                Class {classNum}th ({currentChapters.length} chapters)
-              </button>
-            ))}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+          </button>
+        </div>
+
+        {/* Admin info */}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+              <User className="h-5 w-5 text-white" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                Admin User
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Session: {password?.substring(0, 8)}...
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 text-xs text-gray-600 dark:text-gray-300">
+            <div className="flex items-center">
+              <Clock className="h-3 w-3 mr-1" />
+              <span>Login time: {currentTime.toLocaleTimeString()}</span>
+            </div>
           </div>
         </div>
 
-        {/* Chapters List */}
-        <div className="space-y-6">
-          {currentChapters.length === 0 ? (
-            <div className={`text-center py-16 rounded-2xl border-2 border-dashed ${
-              isDarkMode 
-                ? 'border-gray-600 text-gray-400' 
-                : 'border-gray-300 text-gray-500'
-            }`}>
-              <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-semibold mb-2">No chapters added yet</h3>
-              <p className="text-lg mb-6">Start by adding your first chapter for Class {selectedClass}th</p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
-              >
-                Add First Chapter
-              </button>
+        {/* Navigation */}
+        <nav className="mt-6 px-3">
+          <div className="space-y-2">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.name}
+                  onClick={item.onClick}
+                  className={`w-full group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    item.current
+                      ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-l-4 border-blue-500'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                >
+                  <Icon className={`mr-3 h-5 w-5 ${
+                    item.current 
+                      ? 'text-blue-500' 
+                      : 'text-gray-400 group-hover:text-gray-500'
+                  }`} />
+                  {item.name}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Quick Stats */}
+        <div className="mt-8 px-6">
+          <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+            Quick Stats
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Total Chapters</span>
+              <span className="font-medium text-gray-900 dark:text-white">{stats.totalChapters}</span>
             </div>
-          ) : (
-            currentChapters.map((chapter) => (
-              <div
-                key={chapter.id}
-                className={`rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-                  isDarkMode ? 'bg-gray-800' : 'bg-white'
-                }`}
-              >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <button
-                      onClick={() => toggleChapterExpansion(chapter.id)}
-                      className="flex items-center space-x-3 text-left flex-1"
-                    >
-                      {expandedChapters[chapter.id] ? (
-                        <ChevronDown className="w-5 h-5 text-blue-600" />
-                      ) : (
-                        <ChevronRight className="w-5 h-5 text-blue-600" />
-                      )}
-                      <div>
-                        <h3 className={`text-xl font-semibold ${
-                          isDarkMode ? 'text-white' : 'text-gray-900'
-                        }`}>
-                          {chapter.title}
-                        </h3>
-                        <p className={`text-sm ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                          {chapter.description}
-                        </p>
-                      </div>
-                    </button>
-                    
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => handleEditChapter(chapter)}
-                        className={`p-2 rounded-lg transition-colors duration-200 ${
-                          isDarkMode 
-                            ? 'text-blue-400 hover:bg-gray-700' 
-                            : 'text-blue-600 hover:bg-blue-50'
-                        }`}
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteChapter(chapter.id)}
-                        className={`p-2 rounded-lg transition-colors duration-200 ${
-                          isDarkMode 
-                            ? 'text-red-400 hover:bg-gray-700' 
-                            : 'text-red-600 hover:bg-red-50'
-                        }`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Class 9</span>
+              <span className="font-medium text-blue-600 dark:text-blue-400">{stats.class9Chapters}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Class 10</span>
+              <span className="font-medium text-green-600 dark:text-green-400">{stats.class10Chapters}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Resources</span>
+              <span className="font-medium text-purple-600 dark:text-purple-400">{stats.totalResources}</span>
+            </div>
+          </div>
+        </div>
 
-                  {expandedChapters[chapter.id] && (
-                    <div className="mt-4 space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Notes Link */}
-                        <div className={`p-4 rounded-xl border ${
-                          isDarkMode 
-                            ? 'border-gray-600 bg-gray-700' 
-                            : 'border-gray-200 bg-gray-50'
-                        }`}>
-                          <div className="flex items-center space-x-2 mb-2">
-                            <FileText className="w-4 h-4 text-green-600" />
-                            <span className={`font-medium ${
-                              isDarkMode ? 'text-white' : 'text-gray-900'
-                            }`}>
-                              Notes
-                            </span>
-                          </div>
-                          {chapter.notesLink ? (
-                            <a
-                              href={chapter.notesLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm"
-                            >
-                              <span>View Notes</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          ) : (
-                            <span className={`text-sm ${
-                              isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                              No notes added
-                            </span>
-                          )}
-                        </div>
-
-                        {/* DPP Link */}
-                        <div className={`p-4 rounded-xl border ${
-                          isDarkMode 
-                            ? 'border-gray-600 bg-gray-700' 
-                            : 'border-gray-200 bg-gray-50'
-                        }`}>
-                          <div className="flex items-center space-x-2 mb-2">
-                            <BookOpen className="w-4 h-4 text-orange-600" />
-                            <span className={`font-medium ${
-                              isDarkMode ? 'text-white' : 'text-gray-900'
-                            }`}>
-                              DPP
-                            </span>
-                          </div>
-                          {chapter.dppLink ? (
-                            <a
-                              href={chapter.dppLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm"
-                            >
-                              <span>View DPP</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          ) : (
-                            <span className={`text-sm ${
-                              isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                              No DPP added
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Lecture Link */}
-                        <div className={`p-4 rounded-xl border ${
-                          isDarkMode 
-                            ? 'border-gray-600 bg-gray-700' 
-                            : 'border-gray-200 bg-gray-50'
-                        }`}>
-                          <div className="flex items-center space-x-2 mb-2">
-                            <Video className="w-4 h-4 text-red-600" />
-                            <span className={`font-medium ${
-                              isDarkMode ? 'text-white' : 'text-gray-900'
-                            }`}>
-                              Lecture
-                            </span>
-                          </div>
-                          {chapter.lectureLink ? (
-                            <a
-                              href={chapter.lectureLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm"
-                            >
-                              <span>Watch Lecture</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          ) : (
-                            <span className={`text-sm ${
-                              isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                              No lecture added
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
+        {/* Logout button */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors duration-200 space-x-2"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
 
-      {/* Add Chapter Modal */}
-      {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`w-full max-w-2xl rounded-2xl shadow-2xl ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between">
-                <h2 className={`text-2xl font-bold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
-                }`}>
-                  Add New Chapter - Class {selectedClass}th
-                </h2>
+      {/* Main content */}
+      <div className="lg:pl-64 flex flex-col min-h-screen">
+        {/* Top header */}
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center">
                 <button
-                  onClick={() => {
-                    setShowAddForm(false);
-                    resetNewChapterForm();
-                  }}
-                  className={`p-2 rounded-lg transition-colors duration-200 ${
-                    isDarkMode 
-                      ? 'text-gray-400 hover:bg-gray-700' 
-                      : 'text-gray-500 hover:bg-gray-100'
-                  }`}
+                  onClick={() => setSidebarOpen(true)}
+                  className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
                 >
-                  <X className="w-6 h-6" />
+                  <Menu className="h-5 w-5" />
                 </button>
-              </div>
-            </div>
-            
-            <div className="p-6 space-y-6">
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Chapter Title *
-                </label>
-                <input
-                  type="text"
-                  value={newChapter.title}
-                  onChange={(e) => setNewChapter(prev => ({...prev, title: e.target.value}))}
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                  placeholder="Enter chapter title..."
-                />
-              </div>
-
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Description
-                </label>
-                <textarea
-                  value={newChapter.description}
-                  onChange={(e) => setNewChapter(prev => ({...prev, description: e.target.value}))}
-                  rows="3"
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                  placeholder="Enter chapter description..."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <FileText className="w-4 h-4 inline mr-1" />
-                    Notes Link (Google Drive)
-                  </label>
-                  <input
-                    type="url"
-                    value={newChapter.notesLink}
-                    onChange={(e) => setNewChapter(prev => ({...prev, notesLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://drive.google.com/file/d/..."
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <BookOpen className="w-4 h-4 inline mr-1" />
-                    DPP Link (Google Drive)
-                  </label>
-                  <input
-                    type="url"
-                    value={newChapter.dppLink}
-                    onChange={(e) => setNewChapter(prev => ({...prev, dppLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://drive.google.com/file/d/..."
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <Video className="w-4 h-4 inline mr-1" />
-                    Lecture Link (YouTube)
-                  </label>
-                  <input
-                    type="url"
-                    value={newChapter.lectureLink}
-                    onChange={(e) => setNewChapter(prev => ({...prev, lectureLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://youtube.com/watch?v=..."
-                  />
+                
+                <div className="ml-4 lg:ml-0">
+                  <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {getPageTitle()}
+                  </h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
+                    {getPageDescription()}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-4">
-              <button
-                onClick={() => {
-                  setShowAddForm(false);
-                  resetNewChapterForm();
-                }}
-                className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${
-                  isDarkMode 
-                    ? 'text-gray-400 hover:bg-gray-700' 
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddChapter}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                <Save className="w-4 h-4 inline mr-2" />
-                Add Chapter
-              </button>
+              <div className="flex items-center space-x-4">
+                <div className="hidden md:flex items-center text-sm text-gray-500 dark:text-gray-400">
+                  <Activity className="h-4 w-4 mr-1" />
+                  <span>Last updated: {new Date(lastUpdated).toLocaleString()}</span>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                    Online
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        </header>
 
-      {/* Edit Chapter Modal */}
-      {isEditing && editingChapter && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`w-full max-w-2xl rounded-2xl shadow-2xl ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between">
-                <h2 className={`text-2xl font-bold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
-                }`}>
-                  Edit Chapter - Class {selectedClass}th
-                </h2>
-                <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setEditingChapter(null);
-                  }}
-                  className={`p-2 rounded-lg transition-colors duration-200 ${
-                    isDarkMode 
-                      ? 'text-gray-400 hover:bg-gray-700' 
-                      : 'text-gray-500 hover:bg-gray-100'
-                  }`}
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6 space-y-6">
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Chapter Title *
-                </label>
-                <input
-                  type="text"
-                  value={editingChapter.title}
-                  onChange={(e) => setEditingChapter(prev => ({...prev, title: e.target.value}))}
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                  placeholder="Enter chapter title..."
-                />
-              </div>
-
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Description
-                </label>
-                <textarea
-                  value={editingChapter.description}
-                  onChange={(e) => setEditingChapter(prev => ({...prev, description: e.target.value}))}
-                  rows="3"
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                  placeholder="Enter chapter description..."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <FileText className="w-4 h-4 inline mr-1" />
-                    Notes Link (Google Drive)
-                  </label>
-                  <input
-                    type="url"
-                    value={editingChapter.notesLink}
-                    onChange={(e) => setEditingChapter(prev => ({...prev, notesLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://drive.google.com/file/d/..."
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <BookOpen className="w-4 h-4 inline mr-1" />
-                    DPP Link (Google Drive)
-                  </label>
-                  <input
-                    type="url"
-                    value={editingChapter.dppLink}
-                    onChange={(e) => setEditingChapter(prev => ({...prev, dppLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://drive.google.com/file/d/..."
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <Video className="w-4 h-4 inline mr-1" />
-                    Lecture Link (YouTube)
-                  </label>
-                  <input
-                    type="url"
-                    value={editingChapter.lectureLink}
-                    onChange={(e) => setEditingChapter(prev => ({...prev, lectureLink: e.target.value}))}
-                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="https://youtube.com/watch?v=..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-4">
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditingChapter(null);
-                }}
-                className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${
-                  isDarkMode 
-                    ? 'text-gray-400 hover:bg-gray-700' 
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdateChapter}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                <Save className="w-4 h-4 inline mr-2" />
-                Update Chapter
-              </button>
-            </div>
+        {/* Breadcrumb */}
+        <div className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-4 sm:px-6 lg:px-8 py-3">
+            <nav className="flex" aria-label="Breadcrumb">
+              <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                <li>
+                  <button
+                    onClick={() => handleViewChange('dashboard')}
+                    className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+                  >
+                    Dashboard
+                  </button>
+                </li>
+                {selectedView === 'courses' && (
+                  <>
+                    <li className="flex items-center">
+                      <span className="mx-2">/</span>
+                      <span className="text-gray-700 dark:text-gray-300">Courses</span>
+                    </li>
+                  </>
+                )}
+                {selectedView === 'chapters' && (
+                  <>
+                    <li className="flex items-center">
+                      <span className="mx-2">/</span>
+                      <button
+                        onClick={() => handleViewChange('courses')}
+                        className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+                      >
+                        Courses
+                      </button>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="mx-2">/</span>
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {selectedClass === 'class9' ? 'Class 9' : 'Class 10'}
+                      </span>
+                    </li>
+                  </>
+                )}
+              </ol>
+            </nav>
           </div>
         </div>
-      )}
+
+        {/* Main content area */}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            {renderContent()}
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+          <div className="px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+              <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                <span>Class 9 Chapters: {stats.class9Chapters}</span>
+                <span>Class 10 Chapters: {stats.class10Chapters}</span>
+                <span>Total Resources: {stats.totalResources}</span>
+              </div>
+              <div className="text-xs text-gray-400 dark:text-gray-500">
+                Aryapathshala Admin Panel © 2024
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };

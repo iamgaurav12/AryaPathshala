@@ -1,7 +1,115 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { defaultCourseData } from '../data/defaultContent';
 
 const DataContext = createContext();
 
+// Action types
+const DATA_ACTIONS = {
+  LOAD_DATA: 'LOAD_DATA',
+  UPDATE_CHAPTER: 'UPDATE_CHAPTER',
+  ADD_CHAPTER: 'ADD_CHAPTER',
+  DELETE_CHAPTER: 'DELETE_CHAPTER',
+  UPDATE_RESOURCE: 'UPDATE_RESOURCE',
+  RESET_DATA: 'RESET_DATA'
+};
+
+// Initial state
+const initialState = {
+  courses: {
+    class9: defaultCourseData.class9,
+    class10: defaultCourseData.class10
+  },
+  lastUpdated: Date.now()
+};
+
+// Reducer function
+function dataReducer(state, action) {
+  switch (action.type) {
+    case DATA_ACTIONS.LOAD_DATA:
+      return {
+        ...action.payload,
+        lastUpdated: Date.now()
+      };
+
+    case DATA_ACTIONS.UPDATE_CHAPTER:
+      return {
+        ...state,
+        courses: {
+          ...state.courses,
+          [action.payload.classType]: state.courses[action.payload.classType].map(chapter =>
+            chapter.id === action.payload.chapterId
+              ? { ...chapter, ...action.payload.updates }
+              : chapter
+          )
+        },
+        lastUpdated: Date.now()
+      };
+
+    case DATA_ACTIONS.ADD_CHAPTER:
+      return {
+        ...state,
+        courses: {
+          ...state.courses,
+          [action.payload.classType]: [
+            ...state.courses[action.payload.classType],
+            {
+              id: Date.now().toString(),
+              ...action.payload.chapter,
+              resources: action.payload.chapter.resources || {
+                notes: '',
+                dpp: '',
+                lecture: ''
+              }
+            }
+          ]
+        },
+        lastUpdated: Date.now()
+      };
+
+    case DATA_ACTIONS.DELETE_CHAPTER:
+      return {
+        ...state,
+        courses: {
+          ...state.courses,
+          [action.payload.classType]: state.courses[action.payload.classType].filter(
+            chapter => chapter.id !== action.payload.chapterId
+          )
+        },
+        lastUpdated: Date.now()
+      };
+
+    case DATA_ACTIONS.UPDATE_RESOURCE:
+      return {
+        ...state,
+        courses: {
+          ...state.courses,
+          [action.payload.classType]: state.courses[action.payload.classType].map(chapter =>
+            chapter.id === action.payload.chapterId
+              ? {
+                  ...chapter,
+                  resources: {
+                    ...chapter.resources,
+                    [action.payload.resourceType]: action.payload.url
+                  }
+                }
+              : chapter
+          )
+        },
+        lastUpdated: Date.now()
+      };
+
+    case DATA_ACTIONS.RESET_DATA:
+      return {
+        ...initialState,
+        lastUpdated: Date.now()
+      };
+
+    default:
+      return state;
+  }
+}
+
+// Custom hook to use data context
 export const useData = () => {
   const context = useContext(DataContext);
   if (!context) {
@@ -10,137 +118,78 @@ export const useData = () => {
   return context;
 };
 
-const defaultData = {
-  class9: [
-    {
-      title: "Introduction to Algebra",
-      notes: "https://drive.google.com/file/d/example1",
-      dpp: "https://drive.google.com/file/d/example2",
-      lecture: "https://youtube.com/watch?v=example1"
-    },
-    {
-      title: "Linear Equations",
-      notes: "https://drive.google.com/file/d/example3",
-      dpp: "",
-      lecture: "https://youtube.com/watch?v=example2"
-    }
-  ],
-  class10: [
-    {
-      title: "Quadratic Equations",
-      notes: "https://drive.google.com/file/d/example4",
-      dpp: "https://drive.google.com/file/d/example5",
-      lecture: "https://youtube.com/watch?v=example3"
-    }
-  ]
-};
-
+// Data Provider component
 export const DataProvider = ({ children }) => {
-  const [coursesData, setCoursesData] = useState(defaultData);
-  const [loading, setLoading] = useState(true);
+  const [state, dispatch] = useReducer(dataReducer, initialState);
 
   // Load data from localStorage on mount
   useEffect(() => {
-    try {
-      const savedData = localStorage.getItem('aryapathshala_courses');
-      if (savedData) {
+    const savedData = localStorage.getItem('aryapathshala-data');
+    if (savedData) {
+      try {
         const parsedData = JSON.parse(savedData);
-        setCoursesData(parsedData);
+        dispatch({ type: DATA_ACTIONS.LOAD_DATA, payload: parsedData });
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+        // If loading fails, save current state to localStorage
+        localStorage.setItem('aryapathshala-data', JSON.stringify(state));
       }
-    } catch (error) {
-      console.error('Error loading courses data:', error);
-      // Use default data if there's an error
-      setCoursesData(defaultData);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
-  // Save data to localStorage whenever coursesData changes
+  // Save data to localStorage whenever state changes
   useEffect(() => {
-    if (!loading) {
-      try {
-        localStorage.setItem('aryapathshala_courses', JSON.stringify(coursesData));
-      } catch (error) {
-        console.error('Error saving courses data:', error);
-      }
-    }
-  }, [coursesData, loading]);
+    localStorage.setItem('aryapathshala-data', JSON.stringify(state));
+  }, [state]);
 
-  const updateChapter = (className, chapterIndex, updatedChapter) => {
-    setCoursesData(prev => {
-      const newData = { ...prev };
-      if (!newData[className]) {
-        newData[className] = [];
-      }
-      newData[className][chapterIndex] = updatedChapter;
-      return newData;
-    });
-  };
+  // Action creators
+  const actions = {
+    updateChapter: (classType, chapterId, updates) => {
+      dispatch({
+        type: DATA_ACTIONS.UPDATE_CHAPTER,
+        payload: { classType, chapterId, updates }
+      });
+    },
 
-  const addChapter = (className, newChapter) => {
-    setCoursesData(prev => {
-      const newData = { ...prev };
-      if (!newData[className]) {
-        newData[className] = [];
-      }
-      newData[className].push(newChapter);
-      return newData;
-    });
-  };
+    addChapter: (classType, chapter) => {
+      dispatch({
+        type: DATA_ACTIONS.ADD_CHAPTER,
+        payload: { classType, chapter }
+      });
+    },
 
-  const deleteChapter = (className, chapterIndex) => {
-    setCoursesData(prev => {
-      const newData = { ...prev };
-      if (newData[className]) {
-        newData[className].splice(chapterIndex, 1);
-      }
-      return newData;
-    });
-  };
+    deleteChapter: (classType, chapterId) => {
+      dispatch({
+        type: DATA_ACTIONS.DELETE_CHAPTER,
+        payload: { classType, chapterId }
+      });
+    },
 
-  const getChaptersByClass = (className) => {
-    return coursesData[className] || [];
-  };
+    updateResource: (classType, chapterId, resourceType, url) => {
+      dispatch({
+        type: DATA_ACTIONS.UPDATE_RESOURCE,
+        payload: { classType, chapterId, resourceType, url }
+      });
+    },
 
-  const resetData = () => {
-    setCoursesData(defaultData);
-    localStorage.removeItem('aryapathshala_courses');
-  };
+    resetData: () => {
+      dispatch({ type: DATA_ACTIONS.RESET_DATA });
+    },
 
-  const exportData = () => {
-    const dataStr = JSON.stringify(coursesData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = 'aryapathshala_courses.json';
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  };
+    // Helper functions
+    getChapter: (classType, chapterId) => {
+      return state.courses[classType]?.find(chapter => chapter.id === chapterId);
+    },
 
-  const importData = (jsonData) => {
-    try {
-      const parsedData = JSON.parse(jsonData);
-      setCoursesData(parsedData);
-      return true;
-    } catch (error) {
-      console.error('Error importing data:', error);
-      return false;
+    getAllChapters: (classType) => {
+      return state.courses[classType] || [];
     }
   };
 
   const value = {
-    coursesData,
-    loading,
-    updateChapter,
-    addChapter,
-    deleteChapter,
-    getChaptersByClass,
-    resetData,
-    exportData,
-    importData
+    ...state,
+    ...actions,
+    dispatch // For direct access if needed
   };
 
   return (

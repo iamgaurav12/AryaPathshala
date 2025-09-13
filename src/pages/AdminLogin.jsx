@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Eye, EyeOff, Shield, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Lock, Eye, EyeOff, ShieldCheck, ArrowLeft } from 'lucide-react';
 
 const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated, currentPassword } = useAuth();
   const navigate = useNavigate();
 
@@ -21,124 +21,192 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setIsLoading(true);
 
-    try {
-      const success = login(password);
-      
-      if (success) {
-        // Navigate to admin panel with the password as route parameter
-        navigate(`/admin/${password}`, { replace: true });
-      } else {
-        setError('Invalid password. Please try again.');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+    // Simulate loading for better UX
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    if (!password.trim()) {
+      setError('Please enter a password');
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 3) {
+      setError('Password must be at least 3 characters long');
+      setIsLoading(false);
+      return;
+    }
+
+    const result = login(password);
+    if (result) {
+      // Navigate to admin panel with the password
+      navigate(`/admin/${result}`, { replace: true });
+    } else {
+      setError('Authentication failed. Please try again.');
+    }
+    
+    setIsLoading(false);
+  };
+
+  const handleGoHome = () => {
+    navigate('/', { replace: true });
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !isLoading) {
+      handleSubmit(e);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 dark:from-gray-900 dark:via-gray-800 dark:to-black py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-4 -left-4 w-24 h-24 bg-blue-500 rounded-full opacity-10 animate-pulse"></div>
-          <div className="absolute top-1/2 -right-8 w-32 h-32 bg-purple-500 rounded-full opacity-10 animate-pulse delay-1000"></div>
-          <div className="absolute bottom-10 left-1/3 w-20 h-20 bg-indigo-500 rounded-full opacity-10 animate-pulse delay-500"></div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <div className="mx-auto h-20 w-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
+            <ShieldCheck className="h-10 w-10 text-white" />
+          </div>
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+            Admin Portal
+          </h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Secure access to Aryapathshala management system
+          </p>
         </div>
 
-        <div className="relative">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 shadow-2xl">
-              <Shield className="h-8 w-8 text-white" />
-            </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
-              Admin Access
-            </h2>
-            <p className="text-blue-200 flex items-center justify-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              AryaPathshala Management
-            </p>
-          </div>
-
-          {/* Login Form */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
-            <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Login Form */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+            <div className="space-y-6">
+              {/* Password Input */}
               <div>
-                <label htmlFor="password" className="sr-only">
-                  Password
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Admin Password
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-blue-300" />
+                    <Lock className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
                     required
-                    className="appearance-none relative block w-full pl-10 pr-12 py-3 border border-white/20 placeholder-blue-200 text-white bg-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-200"
-                    placeholder="Enter admin password"
+                    autoComplete="current-password"
+                    className={`appearance-none relative block w-full pl-10 pr-12 py-3 border ${
+                      error 
+                        ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500' 
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500'
+                    } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-700 transition-all duration-200`}
+                    placeholder="Enter your admin password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError(''); // Clear error when typing
+                    }}
+                    onKeyPress={handleKeyPress}
+                    disabled={isLoading}
+                    maxLength={50}
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-50 dark:hover:bg-gray-600 rounded-r-lg transition-colors duration-200"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
+                    tabIndex={-1}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-blue-300 hover:text-blue-200 transition-colors" />
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
                     ) : (
-                      <Eye className="h-5 w-5 text-blue-300 hover:text-blue-200 transition-colors" />
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
                     )}
                   </button>
                 </div>
+                
+                {/* Error Message */}
+                {error && (
+                  <div className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center animate-fade-in">
+                    <div className="w-4 h-4 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mr-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    </div>
+                    {error}
+                  </div>
+                )}
               </div>
 
-              {error && (
-                <div className="bg-red-500/20 border border-red-500/30 text-red-200 px-4 py-3 rounded-lg backdrop-blur-sm">
-                  {error}
-                </div>
-              )}
-
+              {/* Submit Button */}
               <div>
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                  disabled={isLoading || !password.trim()}
+                  className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all duration-200 transform ${
+                    isLoading || !password.trim()
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl'
+                  }`}
                 >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Authenticating...
-                    </>
+                  {isLoading ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <span>Authenticating...</span>
+                    </div>
                   ) : (
-                    'Access Admin Panel'
+                    <div className="flex items-center">
+                      <ShieldCheck className="h-4 w-4 mr-2" />
+                      <span>Access Admin Panel</span>
+                    </div>
                   )}
                 </button>
               </div>
-            </form>
+            </div>
 
-            {/* Help text */}
-            <div className="mt-6 text-center">
-              <p className="text-blue-200 text-sm">
-                Contact administrator if you don't have access credentials.
+            {/* Security Note */}
+            <div className="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p className="text-xs text-blue-700 dark:text-blue-300 text-center">
+                🔒 This is a secure admin area. All activities are logged for security purposes.
               </p>
             </div>
           </div>
+        </form>
 
-          {/* Demo credentials info */}
-          <div className="mt-6 bg-blue-500/10 backdrop-blur-sm rounded-lg p-4 border border-blue-500/20">
-            <p className="text-blue-200 text-sm text-center">
-              <strong>Demo passwords:</strong> admin123, aryaadmin, pathshala2024
-            </p>
-          </div>
+        {/* Navigation */}
+        <div className="flex items-center justify-center space-x-4">
+          <button
+            onClick={handleGoHome}
+            disabled={isLoading}
+            className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 disabled:opacity-50"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to Home</span>
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Aryapathshala Admin Portal v1.0
+          </p>
         </div>
       </div>
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };

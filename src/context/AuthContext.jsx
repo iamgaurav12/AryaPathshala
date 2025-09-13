@@ -13,44 +13,25 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
-  const [loading, setLoading] = useState(true);
 
-  // Check if user is already authenticated on mount
+  // Check if user is authenticated on mount
   useEffect(() => {
-    const authData = localStorage.getItem('aryapathshala_auth');
-    if (authData) {
-      try {
-        const { password, timestamp } = JSON.parse(authData);
-        // Check if authentication is still valid (24 hours)
-        const isValid = Date.now() - timestamp < 24 * 60 * 60 * 1000;
-        if (isValid) {
-          setIsAuthenticated(true);
-          setCurrentPassword(password);
-        } else {
-          localStorage.removeItem('aryapathshala_auth');
-        }
-      } catch (error) {
-        localStorage.removeItem('aryapathshala_auth');
-      }
+    const savedAuth = localStorage.getItem('aryapathshala-auth');
+    const savedPassword = localStorage.getItem('aryapathshala-password');
+    
+    if (savedAuth === 'true' && savedPassword) {
+      setIsAuthenticated(true);
+      setCurrentPassword(savedPassword);
     }
-    setLoading(false);
   }, []);
 
   const login = (password) => {
-    // Simple password validation - you can make this more secure
-    const validPasswords = ['admin123', 'aryaadmin', 'pathshala2024'];
-    
-    if (validPasswords.includes(password)) {
+    if (password && password.trim() !== '') {
       setIsAuthenticated(true);
       setCurrentPassword(password);
-      
-      // Store authentication in localStorage
-      localStorage.setItem('aryapathshala_auth', JSON.stringify({
-        password,
-        timestamp: Date.now()
-      }));
-      
-      return true;
+      localStorage.setItem('aryapathshala-auth', 'true');
+      localStorage.setItem('aryapathshala-password', password);
+      return password; // Return password for navigation
     }
     return false;
   };
@@ -58,15 +39,21 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsAuthenticated(false);
     setCurrentPassword('');
-    localStorage.removeItem('aryapathshala_auth');
+    localStorage.removeItem('aryapathshala-auth');
+    localStorage.removeItem('aryapathshala-password');
+    return true; // Return true to indicate successful logout
+  };
+
+  const isValidPassword = (password) => {
+    return isAuthenticated && password === currentPassword;
   };
 
   const value = {
     isAuthenticated,
     currentPassword,
-    loading,
     login,
-    logout
+    logout,
+    isValidPassword
   };
 
   return (
