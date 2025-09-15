@@ -1,4 +1,4 @@
-// src/context/DataContext.jsx
+// src/context/DataContext.jsx - IMPROVED VERSION
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useFirestore } from '../hooks/useFirestore';
 import { initializeClassData } from '../firebase/firestore';
@@ -14,7 +14,8 @@ const actionTypes = {
   SET_CHAPTERS: 'SET_CHAPTERS',
   SET_SELECTED_CLASS: 'SET_SELECTED_CLASS',
   SET_SELECTED_CHAPTER: 'SET_SELECTED_CHAPTER',
-  CLEAR_SELECTED_CHAPTER: 'CLEAR_SELECTED_CHAPTER'
+  CLEAR_SELECTED_CHAPTER: 'CLEAR_SELECTED_CHAPTER',
+  SET_INITIALIZATION_STATUS: 'SET_INITIALIZATION_STATUS'
 };
 
 // Initial state
@@ -23,7 +24,8 @@ const initialState = {
   selectedChapter: null,
   chapters: [],
   loading: false,
-  error: null
+  error: null,
+  initializationComplete: false
 };
 
 // Reducer
@@ -41,6 +43,8 @@ const dataReducer = (state, action) => {
       return { ...state, selectedChapter: action.payload };
     case actionTypes.CLEAR_SELECTED_CHAPTER:
       return { ...state, selectedChapter: null };
+    case actionTypes.SET_INITIALIZATION_STATUS:
+      return { ...state, initializationComplete: action.payload };
     default:
       return state;
   }
@@ -54,11 +58,46 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     const initializeDefaultData = async () => {
       try {
+        dispatch({ type: actionTypes.SET_LOADING, payload: true });
+        
+        console.log('Starting data initialization...');
+        
         // Initialize both classes with default data
-        await initializeClassData('class9', defaultClass9Data);
-        await initializeClassData('class10', defaultClass10Data);
+        await Promise.all([
+          initializeClassData('class9', defaultClass9Data).catch(error => {
+            console.error('Error initializing class9:', error);
+            return null; // Don't let one failure stop the other
+          }),
+          initializeClassData('class10', defaultClass10Data).catch(error => {
+            console.error('Error initializing class10:', error);
+            return null;
+          })
+        ]);
+        
+        console.log('Data initialization completed successfully');
+        dispatch({ type: actionTypes.SET_INITIALIZATION_STATUS, payload: true });
+        dispatch({ type: actionTypes.SET_LOADING, payload: false });
+        
       } catch (error) {
-        console.error('Error initializing default data:', error);
+        console.error('Error during data initialization:', error);
+        
+        // Provide helpful error messages
+        let userFriendlyMessage = 'Failed to initialize app data. ';
+        
+        if (error.code === 'permission-denied') {
+          userFriendlyMessage += 'Please check Firebase Security Rules.';
+        } else if (error.code === 'unauthenticated') {
+          userFriendlyMessage += 'User authentication required.';
+        } else if (error.message?.includes('projectId')) {
+          userFriendlyMessage += 'Firebase project configuration issue.';
+        } else {
+          userFriendlyMessage += 'Please check your internet connection and try again.';
+        }
+        
+        dispatch({ 
+          type: actionTypes.SET_ERROR, 
+          payload: userFriendlyMessage 
+        });
       }
     };
 
@@ -81,6 +120,11 @@ export const DataProvider = ({ children }) => {
     dispatch({ type: actionTypes.CLEAR_SELECTED_CHAPTER });
   };
 
+  // Clear error
+  const clearError = () => {
+    dispatch({ type: actionTypes.SET_ERROR, payload: null });
+  };
+
   // Get chapter by id
   const getChapterById = (chapterId) => {
     return state.chapters.find(chapter => chapter.id === chapterId);
@@ -94,6 +138,7 @@ export const DataProvider = ({ children }) => {
     selectClass,
     selectChapter,
     clearSelectedChapter,
+    clearError,
     getChapterById,
     
     // Action types for child components

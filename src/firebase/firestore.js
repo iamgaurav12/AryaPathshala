@@ -1,4 +1,4 @@
-// src/firebase/firestore.js
+// src/firebase/firestore.js - IMPROVED VERSION
 import { 
   collection, 
   doc, 
@@ -11,7 +11,8 @@ import {
   orderBy, 
   query,
   serverTimestamp,
-  onSnapshot
+  onSnapshot,
+  writeBatch  // Added for better batch operations
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -21,6 +22,10 @@ const coursesRef = collection(db, 'courses');
 // Get all chapters for a specific class
 export const getChapters = async (className) => {
   try {
+    if (!className) {
+      throw new Error('Class name is required');
+    }
+    
     const classDoc = doc(db, 'courses', className);
     const chaptersRef = collection(classDoc, 'chapters');
     const q = query(chaptersRef, orderBy('order', 'asc'));
@@ -31,7 +36,7 @@ export const getChapters = async (className) => {
       ...doc.data()
     }));
   } catch (error) {
-    console.error('Error fetching chapters:', error);
+    console.error(`Error fetching chapters for ${className}:`, error);
     throw error;
   }
 };
@@ -39,16 +44,20 @@ export const getChapters = async (className) => {
 // Get a specific chapter
 export const getChapter = async (className, chapterId) => {
   try {
+    if (!className || !chapterId) {
+      throw new Error('Class name and chapter ID are required');
+    }
+    
     const chapterDoc = doc(db, 'courses', className, 'chapters', chapterId);
     const snapshot = await getDoc(chapterDoc);
     
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() };
     } else {
-      throw new Error('Chapter not found');
+      throw new Error(`Chapter ${chapterId} not found in ${className}`);
     }
   } catch (error) {
-    console.error('Error fetching chapter:', error);
+    console.error(`Error fetching chapter ${chapterId} from ${className}:`, error);
     throw error;
   }
 };
@@ -56,6 +65,10 @@ export const getChapter = async (className, chapterId) => {
 // Add a new chapter
 export const addChapter = async (className, chapterData) => {
   try {
+    if (!className || !chapterData) {
+      throw new Error('Class name and chapter data are required');
+    }
+    
     const classDoc = doc(db, 'courses', className);
     const chaptersRef = collection(classDoc, 'chapters');
     
@@ -70,9 +83,10 @@ export const addChapter = async (className, chapterData) => {
       updatedAt: serverTimestamp()
     });
     
+    console.log(`Chapter added to ${className} with ID: ${docRef.id}`);
     return docRef.id;
   } catch (error) {
-    console.error('Error adding chapter:', error);
+    console.error(`Error adding chapter to ${className}:`, error);
     throw error;
   }
 };
@@ -80,13 +94,19 @@ export const addChapter = async (className, chapterData) => {
 // Update a chapter
 export const updateChapter = async (className, chapterId, chapterData) => {
   try {
+    if (!className || !chapterId || !chapterData) {
+      throw new Error('Class name, chapter ID, and chapter data are required');
+    }
+    
     const chapterDoc = doc(db, 'courses', className, 'chapters', chapterId);
     await updateDoc(chapterDoc, {
       ...chapterData,
       updatedAt: serverTimestamp()
     });
+    
+    console.log(`Chapter ${chapterId} updated in ${className}`);
   } catch (error) {
-    console.error('Error updating chapter:', error);
+    console.error(`Error updating chapter ${chapterId} in ${className}:`, error);
     throw error;
   }
 };
@@ -94,83 +114,142 @@ export const updateChapter = async (className, chapterId, chapterData) => {
 // Delete a chapter
 export const deleteChapter = async (className, chapterId) => {
   try {
+    if (!className || !chapterId) {
+      throw new Error('Class name and chapter ID are required');
+    }
+    
     const chapterDoc = doc(db, 'courses', className, 'chapters', chapterId);
     await deleteDoc(chapterDoc);
+    
+    console.log(`Chapter ${chapterId} deleted from ${className}`);
   } catch (error) {
-    console.error('Error deleting chapter:', error);
+    console.error(`Error deleting chapter ${chapterId} from ${className}:`, error);
     throw error;
   }
 };
 
-// Reorder chapters
+// Reorder chapters - IMPROVED with batch writes
 export const reorderChapters = async (className, chapters) => {
   try {
-    const batch = [];
+    if (!className || !chapters || !Array.isArray(chapters)) {
+      throw new Error('Class name and chapters array are required');
+    }
+    
+    const batch = writeBatch(db);
     
     chapters.forEach((chapter, index) => {
       const chapterDoc = doc(db, 'courses', className, 'chapters', chapter.id);
-      batch.push(
-        updateDoc(chapterDoc, {
-          order: index + 1,
-          updatedAt: serverTimestamp()
-        })
-      );
+      batch.update(chapterDoc, {
+        order: index + 1,
+        updatedAt: serverTimestamp()
+      });
     });
     
-    await Promise.all(batch);
+    await batch.commit();
+    console.log(`Chapters reordered in ${className}`);
   } catch (error) {
-    console.error('Error reordering chapters:', error);
+    console.error(`Error reordering chapters in ${className}:`, error);
     throw error;
   }
 };
 
 // Real-time listener for chapters
 export const subscribeToChapters = (className, callback) => {
-  const classDoc = doc(db, 'courses', className);
-  const chaptersRef = collection(classDoc, 'chapters');
-  const q = query(chaptersRef, orderBy('order', 'asc'));
-  
-  return onSnapshot(q, (snapshot) => {
-    const chapters = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    callback(chapters);
-  }, (error) => {
-    console.error('Error in chapters subscription:', error);
-  });
+  try {
+    if (!className || typeof callback !== 'function') {
+      throw new Error('Class name and callback function are required');
+    }
+    
+    const classDoc = doc(db, 'courses', className);
+    const chaptersRef = collection(classDoc, 'chapters');
+    const q = query(chaptersRef, orderBy('order', 'asc'));
+    
+    return onSnapshot(q, (snapshot) => {
+      const chapters = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      callback(chapters);
+    }, (error) => {
+      console.error(`Error in chapters subscription for ${className}:`, error);
+      // Call callback with empty array on error to prevent app crash
+      callback([]);
+    });
+  } catch (error) {
+    console.error(`Error setting up subscription for ${className}:`, error);
+    // Return a no-op unsubscribe function
+    return () => {};
+  }
 };
 
-// Initialize default data for a class if it doesn't exist
+// Initialize default data for a class - IMPROVED with better error handling
 export const initializeClassData = async (className, defaultChapters = []) => {
   try {
+    if (!className) {
+      throw new Error('Class name is required');
+    }
+    
+    console.log(`Initializing data for ${className}...`);
+    
     const classDoc = doc(db, 'courses', className);
     const classSnapshot = await getDoc(classDoc);
     
     if (!classSnapshot.exists()) {
+      console.log(`Creating new class document: ${className}`);
+      
       // Create the class document
       await setDoc(classDoc, {
         name: className,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       });
       
       // Add default chapters if provided
-      if (defaultChapters.length > 0) {
+      if (defaultChapters && defaultChapters.length > 0) {
+        console.log(`Adding ${defaultChapters.length} default chapters to ${className}`);
+        
+        const batch = writeBatch(db);
         const chaptersRef = collection(classDoc, 'chapters');
-        const batch = defaultChapters.map((chapter, index) => 
-          addDoc(chaptersRef, {
+        
+        defaultChapters.forEach((chapter, index) => {
+          const chapterDocRef = doc(chaptersRef);
+          batch.set(chapterDocRef, {
             ...chapter,
             order: index + 1,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
-          })
-        );
+          });
+        });
         
-        await Promise.all(batch);
+        await batch.commit();
+        console.log(`Successfully initialized ${className} with ${defaultChapters.length} chapters`);
       }
+    } else {
+      console.log(`Class ${className} already exists, skipping initialization`);
     }
   } catch (error) {
-    console.error('Error initializing class data:', error);
+    console.error(`Error initializing class data for ${className}:`, error);
+    
+    // More specific error handling
+    if (error.code === 'permission-denied') {
+      console.error('❌ PERMISSION DENIED - Check your Firebase Security Rules');
+      console.error('📚 Your app is trying to create/write data but the rules are blocking it');
+    } else if (error.code === 'unauthenticated') {
+      console.error('❌ UNAUTHENTICATED - User needs to be signed in');
+    }
+    
     throw error;
+  }
+};
+
+// Helper function to check if a class exists
+export const classExists = async (className) => {
+  try {
+    const classDoc = doc(db, 'courses', className);
+    const snapshot = await getDoc(classDoc);
+    return snapshot.exists();
+  } catch (error) {
+    console.error(`Error checking if class ${className} exists:`, error);
+    return false;
   }
 };
