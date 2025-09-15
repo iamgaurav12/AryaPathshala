@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStudentAuth } from '../../context/StudentAuthContext';
+import { createStudent } from '../../firebase/collections';
 
 const StudentSignup = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,13 @@ const StudentSignup = () => {
         progress: {}
       };
 
-      await signup(formData.email, formData.password, additionalData);
+      const result = await signup(formData.email, formData.password, additionalData);
+      // Create student document in the students collection
+      await createStudent(result.uid, {
+        name: formData.name,
+        email: formData.email,
+        class: formData.class
+      });
       navigate('/dashboard'); // Navigate to student dashboard after signup
     } catch (err) {
       setError('Failed to create an account: ' + err.message);
