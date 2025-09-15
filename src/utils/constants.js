@@ -167,7 +167,7 @@ export const RESOURCE_TYPES = {
 
 // Authentication Configuration
 export const AUTH_CONFIG = {
-  DEFAULT_PASSWORD: 'aryapathshala2024',
+  DEFAULT_PASSWORD: 'aryapathshala1209navneet',
   SESSION_TIMEOUT: 120, // 2 hours in minutes
   SESSION_WARNING_TIME: 10, // Show warning 10 minutes before expiry
   MAX_LOGIN_ATTEMPTS: 5,

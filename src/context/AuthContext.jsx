@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Admin password from environment variables
-  const ADMIN_PASSWORD = import.meta.env.REACT_APP_ADMIN_PASSWORD || 'aryapathshala2024';
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'aryapathshala1209navneet';
 
   // Check for existing authentication on mount
   useEffect(() => {
