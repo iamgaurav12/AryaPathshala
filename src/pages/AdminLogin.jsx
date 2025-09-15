@@ -28,14 +28,18 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const success = login(password);
+      const success = await login({
+        username: import.meta.env.VITE_ADMIN_USERNAME,
+        password
+      });
       
       if (success) {
-        navigate(`/admin/${password}`);
+        navigate('/admin/dashboard');
       } else {
         setError('Invalid password. Please try again.');
       }
     } catch (error) {
+      console.error('Login error:', error);
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);

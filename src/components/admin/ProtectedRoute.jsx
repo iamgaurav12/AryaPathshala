@@ -1,14 +1,16 @@
-import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { password } = useParams();
-  const { isAuthenticated, isValidPassword } = useAuth();
+  const { isAuthenticated, isAdmin, loading } = useAuth();
 
-  // Check if user is authenticated and password matches
-  if (!isAuthenticated || !isValidPassword(password)) {
-    return <Navigate to="/82104077619352395638gaurav" replace />;
+  // Check if user is authenticated and is an admin
+  if (loading) {
+    return null; // or a small loader if you prefer
+  }
+  if (!isAuthenticated || !isAdmin()) {
+    return <Navigate to="/admin/login" replace />;
   }
 
   return children;

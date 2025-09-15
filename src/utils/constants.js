@@ -23,34 +23,34 @@ export const ROUTES = {
 };
 
 // API Endpoints (for future backend integration)
-export const API_ENDPOINTS = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',
-  AUTH: {
-    LOGIN: '/auth/login',
-    LOGOUT: '/auth/logout',
-    REFRESH: '/auth/refresh',
-    CHANGE_PASSWORD: '/auth/change-password'
-  },
-  COURSES: {
-    GET_ALL: '/courses',
-    GET_BY_CLASS: '/courses/:class',
-    CREATE: '/courses',
-    UPDATE: '/courses/:id',
-    DELETE: '/courses/:id'
-  },
-  CHAPTERS: {
-    GET_ALL: '/chapters',
-    GET_BY_ID: '/chapters/:id',
-    CREATE: '/chapters',
-    UPDATE: '/chapters/:id',
-    DELETE: '/chapters/:id',
-    REORDER: '/chapters/reorder'
-  },
-  RESOURCES: {
-    UPLOAD: '/resources/upload',
-    DELETE: '/resources/:id'
-  }
-};
+// export const API_ENDPOINTS = {
+//   BASE_URL: import.meta.env.REACT_APP_API_URL || 'http://localhost:3001/api',
+//   AUTH: {
+//     LOGIN: '/auth/login',
+//     LOGOUT: '/auth/logout',
+//     REFRESH: '/auth/refresh',
+//     CHANGE_PASSWORD: '/auth/change-password'
+//   },
+//   COURSES: {
+//     GET_ALL: '/courses',
+//     GET_BY_CLASS: '/courses/:class',
+//     CREATE: '/courses',
+//     UPDATE: '/courses/:id',
+//     DELETE: '/courses/:id'
+//   },
+//   CHAPTERS: {
+//     GET_ALL: '/chapters',
+//     GET_BY_ID: '/chapters/:id',
+//     CREATE: '/chapters',
+//     UPDATE: '/chapters/:id',
+//     DELETE: '/chapters/:id',
+//     REORDER: '/chapters/reorder'
+//   },
+//   RESOURCES: {
+//     UPLOAD: '/resources/upload',
+//     DELETE: '/resources/:id'
+//   }
+// };
 
 // Local Storage Keys
 export const STORAGE_KEYS = {

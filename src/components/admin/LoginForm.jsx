@@ -30,14 +30,14 @@ const LoginForm = ({ onLogin }) => {
     setError('');
 
     try {
-      // Simple password validation - you can make this more secure
-      if (formData.username === 'gaurav' && formData.password === 'aryapathshala123') {
-        await login(formData);
+      const success = await login(formData);
+      if (success) {
         onLogin && onLogin();
       } else {
         setError('Invalid username or password');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Login error:', error);
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -197,26 +197,7 @@ const LoginForm = ({ onLogin }) => {
           </button>
         </form>
 
-        {/* Demo Credentials */}
-        <div className={`
-          mt-6 p-4 rounded-lg border-2 border-dashed
-          ${theme === 'dark' 
-            ? 'border-gray-600 bg-gray-800/30' 
-            : 'border-gray-300 bg-gray-50'
-          }
-        `}>
-          <p className={`text-xs font-medium mb-2 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Demo Credentials:
-          </p>
-          <div className={`text-xs space-y-1 ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            <p><strong>Username:</strong> gaurav</p>
-            <p><strong>Password:</strong> aryapathshala123</p>
-          </div>
-        </div>
+
 
         {/* Footer */}
         <div className="text-center mt-6">
