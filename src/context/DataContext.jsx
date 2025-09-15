@@ -1,115 +1,114 @@
+// src/context/DataContext.jsx
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { defaultCourseData } from '../data/defaultContent';
+import { useFirestore } from '../hooks/useFirestore';
+import { initializeClassData } from '../firebase/firestore';
+import { defaultClass9Data, defaultClass10Data } from '../data/defaultContent';
 
+// Create context
 const DataContext = createContext();
 
 // Action types
-const DATA_ACTIONS = {
-  LOAD_DATA: 'LOAD_DATA',
-  UPDATE_CHAPTER: 'UPDATE_CHAPTER',
-  ADD_CHAPTER: 'ADD_CHAPTER',
-  DELETE_CHAPTER: 'DELETE_CHAPTER',
-  UPDATE_RESOURCE: 'UPDATE_RESOURCE',
-  RESET_DATA: 'RESET_DATA'
+const actionTypes = {
+  SET_LOADING: 'SET_LOADING',
+  SET_ERROR: 'SET_ERROR',
+  SET_CHAPTERS: 'SET_CHAPTERS',
+  SET_SELECTED_CLASS: 'SET_SELECTED_CLASS',
+  SET_SELECTED_CHAPTER: 'SET_SELECTED_CHAPTER',
+  CLEAR_SELECTED_CHAPTER: 'CLEAR_SELECTED_CHAPTER'
 };
 
 // Initial state
 const initialState = {
-  courses: {
-    class9: defaultCourseData.class9,
-    class10: defaultCourseData.class10
-  },
-  lastUpdated: Date.now()
+  selectedClass: null,
+  selectedChapter: null,
+  chapters: [],
+  loading: false,
+  error: null
 };
 
-// Reducer function
-function dataReducer(state, action) {
+// Reducer
+const dataReducer = (state, action) => {
   switch (action.type) {
-    case DATA_ACTIONS.LOAD_DATA:
-      return {
-        ...action.payload,
-        lastUpdated: Date.now()
-      };
-
-    case DATA_ACTIONS.UPDATE_CHAPTER:
-      return {
-        ...state,
-        courses: {
-          ...state.courses,
-          [action.payload.classType]: state.courses[action.payload.classType].map(chapter =>
-            chapter.id === action.payload.chapterId
-              ? { ...chapter, ...action.payload.updates }
-              : chapter
-          )
-        },
-        lastUpdated: Date.now()
-      };
-
-    case DATA_ACTIONS.ADD_CHAPTER:
-      return {
-        ...state,
-        courses: {
-          ...state.courses,
-          [action.payload.classType]: [
-            ...state.courses[action.payload.classType],
-            {
-              id: Date.now().toString(),
-              ...action.payload.chapter,
-              resources: action.payload.chapter.resources || {
-                notes: '',
-                dpp: '',
-                lecture: ''
-              }
-            }
-          ]
-        },
-        lastUpdated: Date.now()
-      };
-
-    case DATA_ACTIONS.DELETE_CHAPTER:
-      return {
-        ...state,
-        courses: {
-          ...state.courses,
-          [action.payload.classType]: state.courses[action.payload.classType].filter(
-            chapter => chapter.id !== action.payload.chapterId
-          )
-        },
-        lastUpdated: Date.now()
-      };
-
-    case DATA_ACTIONS.UPDATE_RESOURCE:
-      return {
-        ...state,
-        courses: {
-          ...state.courses,
-          [action.payload.classType]: state.courses[action.payload.classType].map(chapter =>
-            chapter.id === action.payload.chapterId
-              ? {
-                  ...chapter,
-                  resources: {
-                    ...chapter.resources,
-                    [action.payload.resourceType]: action.payload.url
-                  }
-                }
-              : chapter
-          )
-        },
-        lastUpdated: Date.now()
-      };
-
-    case DATA_ACTIONS.RESET_DATA:
-      return {
-        ...initialState,
-        lastUpdated: Date.now()
-      };
-
+    case actionTypes.SET_LOADING:
+      return { ...state, loading: action.payload };
+    case actionTypes.SET_ERROR:
+      return { ...state, error: action.payload, loading: false };
+    case actionTypes.SET_CHAPTERS:
+      return { ...state, chapters: action.payload, loading: false, error: null };
+    case actionTypes.SET_SELECTED_CLASS:
+      return { ...state, selectedClass: action.payload, selectedChapter: null };
+    case actionTypes.SET_SELECTED_CHAPTER:
+      return { ...state, selectedChapter: action.payload };
+    case actionTypes.CLEAR_SELECTED_CHAPTER:
+      return { ...state, selectedChapter: null };
     default:
       return state;
   }
-}
+};
 
-// Custom hook to use data context
+// Data Provider Component
+export const DataProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(dataReducer, initialState);
+
+  // Initialize default data on app start
+  useEffect(() => {
+    const initializeDefaultData = async () => {
+      try {
+        // Initialize both classes with default data
+        await initializeClassData('class9', defaultClass9Data);
+        await initializeClassData('class10', defaultClass10Data);
+      } catch (error) {
+        console.error('Error initializing default data:', error);
+      }
+    };
+
+    initializeDefaultData();
+  }, []);
+
+  // Select a class (9 or 10)
+  const selectClass = (className) => {
+    dispatch({ type: actionTypes.SET_SELECTED_CLASS, payload: className });
+    dispatch({ type: actionTypes.CLEAR_SELECTED_CHAPTER });
+  };
+
+  // Select a chapter
+  const selectChapter = (chapter) => {
+    dispatch({ type: actionTypes.SET_SELECTED_CHAPTER, payload: chapter });
+  };
+
+  // Clear selected chapter
+  const clearSelectedChapter = () => {
+    dispatch({ type: actionTypes.CLEAR_SELECTED_CHAPTER });
+  };
+
+  // Get chapter by id
+  const getChapterById = (chapterId) => {
+    return state.chapters.find(chapter => chapter.id === chapterId);
+  };
+
+  const contextValue = {
+    // State
+    ...state,
+    
+    // Actions
+    selectClass,
+    selectChapter,
+    clearSelectedChapter,
+    getChapterById,
+    
+    // Action types for child components
+    actionTypes,
+    dispatch
+  };
+
+  return (
+    <DataContext.Provider value={contextValue}>
+      {children}
+    </DataContext.Provider>
+  );
+};
+
+// Hook to use data context
 export const useData = () => {
   const context = useContext(DataContext);
   if (!context) {
@@ -118,83 +117,37 @@ export const useData = () => {
   return context;
 };
 
-// Data Provider component
-export const DataProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(dataReducer, initialState);
+// Higher-order component for components that need Firebase data
+export const withFirestoreData = (Component, className) => {
+  return function WrappedComponent(props) {
+    const { chapters, loading, error, ...firestoreActions } = useFirestore(className);
+    const { dispatch } = useData();
 
-  // Load data from localStorage on mount
-  useEffect(() => {
-    const savedData = localStorage.getItem('aryapathshala-data');
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        dispatch({ type: DATA_ACTIONS.LOAD_DATA, payload: parsedData });
-      } catch (error) {
-        console.error('Failed to load saved data:', error);
-        // If loading fails, save current state to localStorage
-        localStorage.setItem('aryapathshala-data', JSON.stringify(state));
+    // Update context when Firebase data changes
+    useEffect(() => {
+      if (chapters) {
+        dispatch({ type: actionTypes.SET_CHAPTERS, payload: chapters });
       }
-    }
-  }, []);
+    }, [chapters, dispatch]);
 
-  // Save data to localStorage whenever state changes
-  useEffect(() => {
-    localStorage.setItem('aryapathshala-data', JSON.stringify(state));
-  }, [state]);
+    useEffect(() => {
+      dispatch({ type: actionTypes.SET_LOADING, payload: loading });
+    }, [loading, dispatch]);
 
-  // Action creators
-  const actions = {
-    updateChapter: (classType, chapterId, updates) => {
-      dispatch({
-        type: DATA_ACTIONS.UPDATE_CHAPTER,
-        payload: { classType, chapterId, updates }
-      });
-    },
+    useEffect(() => {
+      if (error) {
+        dispatch({ type: actionTypes.SET_ERROR, payload: error });
+      }
+    }, [error, dispatch]);
 
-    addChapter: (classType, chapter) => {
-      dispatch({
-        type: DATA_ACTIONS.ADD_CHAPTER,
-        payload: { classType, chapter }
-      });
-    },
-
-    deleteChapter: (classType, chapterId) => {
-      dispatch({
-        type: DATA_ACTIONS.DELETE_CHAPTER,
-        payload: { classType, chapterId }
-      });
-    },
-
-    updateResource: (classType, chapterId, resourceType, url) => {
-      dispatch({
-        type: DATA_ACTIONS.UPDATE_RESOURCE,
-        payload: { classType, chapterId, resourceType, url }
-      });
-    },
-
-    resetData: () => {
-      dispatch({ type: DATA_ACTIONS.RESET_DATA });
-    },
-
-    // Helper functions
-    getChapter: (classType, chapterId) => {
-      return state.courses[classType]?.find(chapter => chapter.id === chapterId);
-    },
-
-    getAllChapters: (classType) => {
-      return state.courses[classType] || [];
-    }
+    return (
+      <Component 
+        {...props} 
+        chapters={chapters}
+        loading={loading}
+        error={error}
+        {...firestoreActions}
+      />
+    );
   };
-
-  const value = {
-    ...state,
-    ...actions,
-    dispatch // For direct access if needed
-  };
-
-  return (
-    <DataContext.Provider value={value}>
-      {children}
-    </DataContext.Provider>
-  );
 };

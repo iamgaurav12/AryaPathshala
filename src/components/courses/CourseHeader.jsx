@@ -1,239 +1,200 @@
+// src/components/courses/CourseHeader.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../hooks/useTheme';
+import { 
+  BookOpen, 
+  Users, 
+  Award, 
+  TrendingUp,
+  Target,
+  Star
+} from 'lucide-react';
 
 const CourseHeader = ({ 
-  courseTitle, 
-  courseClass, 
-  totalChapters, 
-  completedChapters, 
-  courseDescription,
-  subjects = []
+  title, 
+  description, 
+  totalChapters = 0, 
+  isBoard = false 
 }) => {
-  const navigate = useNavigate();
-  
-  const progressPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
-  
-  const courseStats = [
-    { icon: '📚', label: 'Chapters', value: totalChapters, color: 'from-blue-500 to-cyan-500' },
-    { icon: '✅', label: 'Completed', value: completedChapters, color: 'from-green-500 to-emerald-500' },
-    { icon: '📈', label: 'Progress', value: `${progressPercentage}%`, color: 'from-purple-500 to-pink-500' },
-    { icon: '⭐', label: 'Subjects', value: subjects.length, color: 'from-orange-500 to-red-500' }
+  const { darkMode } = useTheme();
+
+  const features = [
+    {
+      icon: BookOpen,
+      label: 'Comprehensive Notes',
+      description: 'Detailed study material'
+    },
+    {
+      icon: Target,
+      label: 'Practice Problems',
+      description: 'Daily practice sets'
+    },
+    {
+      icon: TrendingUp,
+      label: 'Video Lectures',
+      description: 'Expert explanations'
+    }
   ];
 
-  const subjectIcons = {
-    'Mathematics': '🔢',
-    'Science': '🧪', 
-    'Physics': '⚛️',
-    'Chemistry': '🧪',
-    'Biology': '🧬',
-    'English': '📚',
-    'Hindi': '📖',
-    'Social Science': '🌍',
-    'History': '🏛️',
-    'Geography': '🗺️',
-    'Civics': '🏛️',
-    'Economics': '💰'
-  };
-
   return (
-    <div className="relative bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-purple-900/20 dark:to-blue-900/20 overflow-hidden">
+    <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'} relative overflow-hidden`}>
       {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200 dark:bg-blue-700 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-16 h-16 bg-purple-200 dark:bg-purple-700 rotate-45 opacity-20 animate-spin" style={{ animationDuration: '10s' }}></div>
-        <div className="absolute bottom-20 left-20 w-12 h-12 bg-pink-200 dark:bg-pink-700 rounded-full opacity-20 animate-bounce"></div>
-        <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-700 dark:to-purple-700 opacity-10 rounded-lg transform rotate-12"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute transform rotate-12 -top-8 -right-8">
+          <div className="grid grid-cols-8 gap-4">
+            {[...Array(64)].map((_, i) => (
+              <div key={i} className={`w-4 h-4 rounded ${darkMode ? 'bg-gray-600' : 'bg-blue-300'}`}></div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center space-x-2 text-sm mb-8">
-          <button
-            onClick={() => navigate('/')}
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-200"
-          >
-            Home
-          </button>
-          <span className="text-gray-400 dark:text-gray-500">→</span>
-          <span className="text-gray-600 dark:text-gray-300 font-medium">{courseTitle}</span>
-        </nav>
-
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Course Info - Left Side */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Main Title */}
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-semibold shadow-lg">
-                  <span>🎓</span>
-                  <span>{courseClass}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="flex text-yellow-400">
-                    {'⭐'.repeat(5)}
-                  </div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">4.9/5</span>
-                </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Left Side - Content */}
+          <div>
+            <div className="flex items-center space-x-3 mb-4">
+              <div className={`p-3 rounded-full ${
+                darkMode ? 'bg-blue-900/50' : 'bg-blue-100'
+              }`}>
+                <BookOpen className="h-8 w-8 text-blue-500" />
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                {courseTitle}
-              </h1>
-              
-              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl">
-                {courseDescription}
-              </p>
+              {isBoard && (
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  darkMode ? 'bg-orange-900/50 text-orange-300' : 'bg-orange-100 text-orange-700'
+                }`}>
+                  <div className="flex items-center space-x-1">
+                    <Award className="h-4 w-4" />
+                    <span>Board Exam</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Subjects List */}
-            {subjects.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  📚 Subjects Covered
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {subjects.map((subject, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 border border-gray-200 dark:border-gray-700 group"
-                    >
-                      <span className="text-xl group-hover:scale-110 transition-transform duration-300">
-                        {subjectIcons[subject] || '📖'}
-                      </span>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
-                        {subject}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <h1 className={`text-4xl lg:text-5xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              {title}
+              <span className="text-blue-500">.</span>
+            </h1>
+            
+            <p className={`text-xl mb-6 ${
+              darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              {description}
+            </p>
 
-            {/* Progress Bar */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  📈 Your Progress
-                </h3>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {progressPercentage}%
+            {/* Stats */}
+            <div className="flex items-center space-x-6 mb-8">
+              <div className="flex items-center space-x-2">
+                <BookOpen className="h-5 w-5 text-blue-500" />
+                <span className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {totalChapters}
+                </span>
+                <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Chapters
                 </span>
               </div>
               
-              {/* Progress Bar */}
-              <div className="relative h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
-                <div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${progressPercentage}%` }}
-                >
-                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Users className="h-5 w-5 text-green-500" />
+                <span className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  1000+
+                </span>
+                <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Students
+                </span>
               </div>
+
+              <div className="flex items-center space-x-2">
+                <Star className="h-5 w-5 text-yellow-500" />
+                <span className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  4.8
+                </span>
+                <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Rating
+                </span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium flex items-center justify-center space-x-2">
+                <BookOpen className="h-5 w-5" />
+                <span>Start Learning</span>
+              </button>
               
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                <span>{completedChapters} of {totalChapters} chapters completed</span>
-                <span>{totalChapters - completedChapters} remaining</span>
-              </div>
+              <button className={`px-6 py-3 border-2 rounded-lg font-medium transition-colors ${
+                darkMode 
+                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                  : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}>
+                View Curriculum
+              </button>
             </div>
           </div>
 
-          {/* Stats Cards - Right Side */}
+          {/* Right Side - Features */}
           <div className="space-y-4">
-            {courseStats.map((stat, index) => (
-              <div
+            <h3 className={`text-lg font-semibold mb-6 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              What You'll Get:
+            </h3>
+            
+            {features.map((feature, index) => (
+              <div 
                 key={index}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-200 dark:border-gray-700 group"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className={`flex items-center space-x-4 p-4 rounded-lg ${
+                  darkMode ? 'bg-gray-800/50 backdrop-blur' : 'bg-white/80 backdrop-blur'
+                } shadow-sm hover:shadow-md transition-all duration-200`}
               >
-                <div className="flex items-center space-x-4">
-                  <div className={`w-14 h-14 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                      {stat.label}
-                    </p>
-                  </div>
+                <div className={`p-3 rounded-full ${
+                  darkMode ? 'bg-blue-900/50' : 'bg-blue-100'
+                }`}>
+                  <feature.icon className="h-6 w-6 text-blue-500" />
+                </div>
+                
+                <div>
+                  <h4 className={`font-semibold ${
+                    darkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {feature.label}
+                  </h4>
+                  <p className={`text-sm ${
+                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    {feature.description}
+                  </p>
                 </div>
               </div>
             ))}
 
-            {/* Quick Actions */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
-              <h3 className="font-semibold mb-4 flex items-center space-x-2">
-                <span>⚡</span>
-                <span>Quick Actions</span>
-              </h3>
-              <div className="space-y-3">
-                <button className="w-full text-left px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors duration-200 flex items-center space-x-3">
-                  <span>📊</span>
-                  <span className="font-medium">View Progress Report</span>
-                </button>
-                <button className="w-full text-left px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors duration-200 flex items-center space-x-3">
-                  <span>⏰</span>
-                  <span className="font-medium">Study Schedule</span>
-                </button>
-                <button className="w-full text-left px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors duration-200 flex items-center space-x-3">
-                  <span>🎯</span>
-                  <span className="font-medium">Take Mock Test</span>
-                </button>
+            {/* Special message for board classes */}
+            {isBoard && (
+              <div className={`mt-6 p-4 rounded-lg border-l-4 border-orange-500 ${
+                darkMode ? 'bg-orange-900/20' : 'bg-orange-50'
+              }`}>
+                <div className="flex items-start space-x-3">
+                  <Award className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className={`font-medium ${
+                      darkMode ? 'text-orange-200' : 'text-orange-800'
+                    }`}>
+                      Board Exam Ready
+                    </h4>
+                    <p className={`text-sm mt-1 ${
+                      darkMode ? 'text-orange-300' : 'text-orange-700'
+                    }`}>
+                      Complete preparation material aligned with the latest CBSE curriculum and exam pattern.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Study Tips */}
-            <div className="bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-2xl p-6 border border-green-200 dark:border-green-700">
-              <h3 className="font-semibold text-green-800 dark:text-green-300 mb-4 flex items-center space-x-2">
-                <span>💡</span>
-                <span>Study Tip of the Day</span>
-              </h3>
-              <p className="text-sm text-green-700 dark:text-green-300 leading-relaxed">
-                "Review each chapter immediately after watching the lecture and solve at least 5 practice questions to reinforce your understanding."
-              </p>
-              <div className="mt-4 flex items-center space-x-2 text-xs text-green-600 dark:text-green-400">
-                <span>✨</span>
-                <span>Pro tip from our expert faculty</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-
-        {/* Achievement Badges */}
-        {progressPercentage > 0 && (
-          <div className="mt-12">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 text-center">
-              🏆 Your Achievements
-            </h3>
-            <div className="flex flex-wrap justify-center gap-4">
-              {progressPercentage >= 25 && (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-full text-sm font-semibold shadow-lg">
-                  <span>🌟</span>
-                  <span>Getting Started</span>
-                </div>
-              )}
-              {progressPercentage >= 50 && (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-400 to-teal-400 text-white rounded-full text-sm font-semibold shadow-lg">
-                  <span>🚀</span>
-                  <span>Halfway Hero</span>
-                </div>
-              )}
-              {progressPercentage >= 75 && (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-full text-sm font-semibold shadow-lg">
-                  <span>⭐</span>
-                  <span>Almost There</span>
-                </div>
-              )}
-              {progressPercentage >= 100 && (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-full text-sm font-semibold shadow-lg">
-                  <span>🏆</span>
-                  <span>Course Complete</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,156 +1,175 @@
-export const defaultCourseData = {
-  class9: [
-    {
-      id: '9-1',
-      title: 'Number Systems',
-      description: 'Introduction to real numbers, rational and irrational numbers',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '9-2',
-      title: 'Polynomials',
-      description: 'Understanding polynomials, their types, and operations',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '9-3',
-      title: 'Coordinate Geometry',
-      description: 'Introduction to coordinate plane and plotting points',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '9-4',
-      title: 'Linear Equations in Two Variables',
-      description: 'Solving systems of linear equations graphically',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '9-5',
-      title: 'Introduction to Euclid\'s Geometry',
-      description: 'Basic concepts of Euclidean geometry and axioms',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    }
-  ],
-  class10: [
-    {
-      id: '10-1',
-      title: 'Real Numbers',
-      description: 'Euclid\'s division lemma, fundamental theorem of arithmetic',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-2',
-      title: 'Polynomials',
-      description: 'Zeros of polynomials, relationship between zeros and coefficients',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-3',
-      title: 'Pair of Linear Equations in Two Variables',
-      description: 'Algebraic and graphical methods of solving linear equations',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-4',
-      title: 'Quadratic Equations',
-      description: 'Nature of roots, methods of solving quadratic equations',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-5',
-      title: 'Arithmetic Progressions',
-      description: 'General term, sum of first n terms of an AP',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-6',
-      title: 'Triangles',
-      description: 'Similarity of triangles, criteria for similarity',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-7',
-      title: 'Coordinate Geometry',
-      description: 'Distance formula, section formula, area of triangle',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-8',
-      title: 'Introduction to Trigonometry',
-      description: 'Trigonometric ratios, identities, and their applications',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-9',
-      title: 'Some Applications of Trigonometry',
-      description: 'Heights and distances, angle of elevation and depression',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    },
-    {
-      id: '10-10',
-      title: 'Circles',
-      description: 'Tangent to a circle, number of tangents from external point',
-      resources: {
-        notes: '',
-        lecture: '',
-        dpp: ''
-      }
-    }
-  ]
+// src/data/defaultContent.js
+
+export const defaultClass9Data = [
+  {
+    title: "Number Systems",
+    description: "Learn about different types of numbers and their properties",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Polynomials",
+    description: "Understanding polynomials and their operations",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Coordinate Geometry",
+    description: "Introduction to coordinate geometry and graphing",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Linear Equations in Two Variables",
+    description: "Solving and graphing linear equations",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Introduction to Euclid's Geometry",
+    description: "Basic concepts of Euclidean geometry",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Matter in Our Surroundings",
+    description: "Understanding the nature of matter and its states",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  },
+  {
+    title: "Is Matter Around Us Pure",
+    description: "Classification of matter - pure substances and mixtures",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  },
+  {
+    title: "Atoms and Molecules",
+    description: "Basic concepts of atoms, molecules and their behavior",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  }
+];
+
+export const defaultClass10Data = [
+  {
+    title: "Real Numbers",
+    description: "Advanced concepts of real numbers and their properties",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Polynomials",
+    description: "Advanced polynomial operations and applications",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Pair of Linear Equations in Two Variables",
+    description: "Solving systems of linear equations",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Quadratic Equations",
+    description: "Understanding and solving quadratic equations",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Arithmetic Progressions",
+    description: "Sequences and series in arithmetic progression",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Mathematics",
+    isActive: true
+  },
+  {
+    title: "Light - Reflection and Refraction",
+    description: "Understanding the behavior of light",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  },
+  {
+    title: "Human Eye and Colourful World",
+    description: "How we see and perceive colors",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  },
+  {
+    title: "Electricity",
+    description: "Basic concepts of electric current and circuits",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  },
+  {
+    title: "Magnetic Effects of Electric Current",
+    description: "Relationship between electricity and magnetism",
+    notesLink: "",
+    dppLink: "",
+    lectureLink: "",
+    subject: "Science",
+    isActive: true
+  }
+];
+
+// Chapter data structure for reference
+export const chapterStructure = {
+  id: "string", // Auto-generated by Firebase
+  title: "string",
+  description: "string",
+  notesLink: "string", // Google Drive link
+  dppLink: "string", // Google Drive link  
+  lectureLink: "string", // YouTube link
+  subject: "string", // Mathematics, Science, etc.
+  order: "number", // For ordering chapters
+  isActive: "boolean", // To hide/show chapters
+  createdAt: "timestamp",
+  updatedAt: "timestamp"
 };

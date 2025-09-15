@@ -1,252 +1,149 @@
-import React, { useState } from 'react';
+// src/components/courses/ChapterCard.jsx
+import React from 'react';
+import { useTheme } from '../../hooks/useTheme';
+import { 
+  BookOpen, 
+  FileText, 
+  Video, 
+  ExternalLink,
+  CheckCircle,
+  Circle
+} from 'lucide-react';
 
 const ChapterCard = ({ 
-  chapter,
-  isSelected = false,
-  isCompleted = false,
-  onSelect,
-  showProgress = true,
-  className = ""
+  chapter, 
+  isSelected, 
+  onClick, 
+  showProgress = false, 
+  completionRate = 0 
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const {
-    id,
-    title,
-    subject,
-    description,
-    duration,
-    difficulty,
-    topics = [],
-    resources = {},
-    progress = 0
-  } = chapter;
+  const { darkMode } = useTheme();
 
-  const difficultyConfig = {
-    easy: { color: 'from-green-400 to-green-600', icon: '😊', label: 'Easy' },
-    medium: { color: 'from-yellow-400 to-orange-500', icon: '🤔', label: 'Medium' },
-    hard: { color: 'from-red-400 to-red-600', icon: '😤', label: 'Hard' }
-  };
+  const hasNotes = chapter.notesLink && chapter.notesLink.trim() !== '';
+  const hasDpp = chapter.dppLink && chapter.dppLink.trim() !== '';
+  const hasLecture = chapter.lectureLink && chapter.lectureLink.trim() !== '';
 
-  const subjectColors = {
-    'Mathematics': 'from-blue-500 to-cyan-500',
-    'Science': 'from-green-500 to-emerald-500',
-    'Physics': 'from-purple-500 to-indigo-500',
-    'Chemistry': 'from-orange-500 to-red-500',
-    'Biology': 'from-teal-500 to-green-500',
-    'English': 'from-pink-500 to-rose-500',
-    'Hindi': 'from-amber-500 to-yellow-500',
-    'Social Science': 'from-indigo-500 to-purple-500',
-    'History': 'from-brown-400 to-amber-600',
-    'Geography': 'from-emerald-500 to-teal-500',
-    'Civics': 'from-blue-600 to-indigo-600',
-    'Economics': 'from-green-600 to-emerald-600'
-  };
-
-  const subjectIcons = {
-    'Mathematics': '🔢',
-    'Science': '🧪',
-    'Physics': '⚛️',
-    'Chemistry': '🧪',
-    'Biology': '🧬',
-    'English': '📚',
-    'Hindi': '📖',
-    'Social Science': '🌍',
-    'History': '🏛️',
-    'Geography': '🗺️',
-    'Civics': '🏛️',
-    'Economics': '💰'
-  };
-
-  const currentDifficulty = difficultyConfig[difficulty] || difficultyConfig.medium;
-  const subjectGradient = subjectColors[subject] || 'from-gray-500 to-gray-600';
-  const subjectIcon = subjectIcons[subject] || '📖';
-
-  const resourceCount = {
-    notes: resources.notes ? 1 : 0,
-    lectures: resources.lectures ? resources.lectures.length : 0,
-    dpp: resources.dpp ? 1 : 0,
-    total: 0
-  };
-  resourceCount.total = resourceCount.notes + resourceCount.lectures + resourceCount.dpp;
+  const resourceCount = [hasNotes, hasDpp, hasLecture].filter(Boolean).length;
 
   return (
     <div
-      className={`group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transform transition-all duration-300 cursor-pointer border-2 overflow-hidden ${
-        isSelected 
-          ? 'border-blue-500 dark:border-blue-400 scale-105 shadow-blue-200 dark:shadow-blue-800' 
-          : 'border-gray-200 dark:border-gray-700 hover:-translate-y-2 hover:border-blue-300 dark:hover:border-blue-600'
-      } ${className}`}
-      onClick={() => onSelect && onSelect(chapter)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+        isSelected
+          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
+          : darkMode
+          ? 'border-gray-600 hover:border-gray-500 hover:bg-gray-700'
+          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+      }`}
     >
-      {/* Completion Status Indicator */}
-      {isCompleted && (
-        <div className="absolute top-4 right-4 z-20">
-          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-            <span className="text-white text-sm">✓</span>
-          </div>
-        </div>
-      )}
-
-      {/* Background Gradient Overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${subjectGradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-      
-      {/* Header Section */}
-      <div className="relative p-6 pb-4">
-        {/* Subject Badge */}
-        <div className="flex items-center justify-between mb-4">
-          <div className={`flex items-center space-x-2 px-3 py-1 bg-gradient-to-r ${subjectGradient} text-white rounded-full text-sm font-semibold shadow-md`}>
-            <span>{subjectIcon}</span>
-            <span>{subject}</span>
-          </div>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1 min-w-0">
+          <h3 className={`font-semibold text-lg mb-1 ${
+            isSelected ? 'text-blue-700 dark:text-blue-300' : ''
+          }`}>
+            {chapter.title}
+          </h3>
           
-          {/* Difficulty Badge */}
-          <div className={`flex items-center space-x-1 px-3 py-1 bg-gradient-to-r ${currentDifficulty.color} text-white rounded-full text-xs font-semibold`}>
-            <span>{currentDifficulty.icon}</span>
-            <span>{currentDifficulty.label}</span>
-          </div>
-        </div>
-
-        {/* Chapter Title */}
-        <h3 className={`text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:${subjectGradient} group-hover:bg-clip-text transition-all duration-300`}>
-          {title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
-          {description}
-        </p>
-
-        {/* Chapter Info */}
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <div className="flex items-center space-x-4">
-            <span className="flex items-center space-x-1">
-              <span>⏱️</span>
-              <span>{duration}</span>
+          {chapter.subject && (
+            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+              darkMode 
+                ? 'bg-gray-700 text-gray-300' 
+                : 'bg-gray-200 text-gray-700'
+            }`}>
+              {chapter.subject}
             </span>
-            <span className="flex items-center space-x-1">
-              <span>📊</span>
-              <span>{topics.length} topics</span>
-            </span>
-          </div>
+          )}
         </div>
-      </div>
 
-      {/* Topics Preview */}
-      {topics.length > 0 && (
-        <div className="px-6 pb-4">
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            📋 Key Topics:
-          </h4>
-          <div className="space-y-2">
-            {topics.slice(0, 3).map((topic, index) => (
-              <div
-                key={index}
-                className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400"
-              >
-                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                <span>{topic}</span>
-              </div>
-            ))}
-            {topics.length > 3 && (
-              <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                +{topics.length - 3} more topics
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Progress Bar */}
-      {showProgress && progress > 0 && (
-        <div className="px-6 pb-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress</span>
-            <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{progress}%</span>
-          </div>
-          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div 
-              className={`h-full bg-gradient-to-r ${subjectGradient} rounded-full transition-all duration-500`}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Resources Summary */}
-      <div className="px-6 pb-6">
-        <div className="grid grid-cols-3 gap-3">
-          {/* Notes */}
-          <div className={`text-center p-3 rounded-xl transition-all duration-300 ${
-            resources.notes 
-              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
-              : 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-          }`}>
-            <div className="text-lg mb-1">📝</div>
-            <div className="text-xs font-semibold">Notes</div>
-            {resources.notes && (
-              <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>
-            )}
-          </div>
-
-          {/* Lectures */}
-          <div className={`text-center p-3 rounded-xl transition-all duration-300 ${
-            resourceCount.lectures > 0 
-              ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
-              : 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-          }`}>
-            <div className="text-lg mb-1">🎥</div>
-            <div className="text-xs font-semibold">
-              Lectures ({resourceCount.lectures})
+        {/* Progress indicator for Class 10 */}
+        {showProgress && (
+          <div className="flex items-center space-x-2 ml-4">
+            <div className={`text-sm font-medium ${
+              completionRate === 100 ? 'text-green-500' : 
+              completionRate > 50 ? 'text-yellow-500' : 'text-red-500'
+            }`}>
+              {completionRate}%
             </div>
-            {resourceCount.lectures > 0 && (
-              <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>
+            {completionRate === 100 ? (
+              <CheckCircle className="h-5 w-5 text-green-500" />
+            ) : (
+              <Circle className="h-5 w-5 text-gray-400" />
             )}
           </div>
-
-          {/* DPP */}
-          <div className={`text-center p-3 rounded-xl transition-all duration-300 ${
-            resources.dpp 
-              ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' 
-              : 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-          }`}>
-            <div className="text-lg mb-1">📋</div>
-            <div className="text-xs font-semibold">DPP</div>
-            {resources.dpp && (
-              <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>
-            )}
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Hover Actions */}
-      <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-r ${subjectGradient} text-white p-4 transform transition-all duration-300 ${
-        isHovered || isSelected ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+      {/* Description */}
+      <p className={`text-sm mb-4 line-clamp-2 ${
+        darkMode ? 'text-gray-400' : 'text-gray-600'
       }`}>
-        <div className="flex items-center justify-between">
-          <div className="text-sm font-semibold">
-            {isCompleted ? 'Review Chapter' : 'Start Learning'}
+        {chapter.description}
+      </p>
+
+      {/* Resources */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          {/* Notes indicator */}
+          <div className={`flex items-center space-x-1 ${
+            hasNotes ? 'text-green-500' : 'text-gray-400'
+          }`}>
+            <FileText className="h-4 w-4" />
+            <span className="text-xs">Notes</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
-              {resourceCount.total} resources
-            </span>
-            <span className="transform group-hover:translate-x-1 transition-transform duration-300">
-              →
-            </span>
+
+          {/* DPP indicator */}
+          <div className={`flex items-center space-x-1 ${
+            hasDpp ? 'text-blue-500' : 'text-gray-400'
+          }`}>
+            <BookOpen className="h-4 w-4" />
+            <span className="text-xs">DPP</span>
           </div>
+
+          {/* Lecture indicator */}
+          <div className={`flex items-center space-x-1 ${
+            hasLecture ? 'text-red-500' : 'text-gray-400'
+          }`}>
+            <Video className="h-4 w-4" />
+            <span className="text-xs">Video</span>
+          </div>
+        </div>
+
+        {/* Resource count and expand indicator */}
+        <div className="flex items-center space-x-2">
+          <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            {resourceCount}/3 resources
+          </span>
+          {resourceCount > 0 && (
+            <ExternalLink className="h-3 w-3 text-gray-400" />
+          )}
         </div>
       </div>
 
-      {/* Selection Border Effect */}
+      {/* Progress bar for Class 10 */}
+      {showProgress && (
+        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-gray-500">Completion</span>
+          </div>
+          <div className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2`}>
+            <div 
+              className={`h-2 rounded-full transition-all duration-300 ${
+                completionRate === 100 ? 'bg-green-500' :
+                completionRate > 50 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${completionRate}%` }}
+            ></div>
+          </div>
+        </div>
+      )}
+
+      {/* Selection indicator */}
       {isSelected && (
-        <div className="absolute inset-0 border-2 border-blue-400 rounded-2xl pointer-events-none">
-          <div className="absolute -top-1 -left-1 w-3 h-3 bg-blue-400 rounded-full"></div>
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full"></div>
-          <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-400 rounded-full"></div>
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-400 rounded-full"></div>
+        <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800">
+          <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+            Click on resources below to access materials →
+          </p>
         </div>
       )}
     </div>
