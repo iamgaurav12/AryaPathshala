@@ -1,4 +1,3 @@
-// src/components/courses/ResourcePanel.jsx
 import React, { useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import { 
@@ -19,25 +18,30 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
   const { darkMode } = useTheme();
   const [loadingResource, setLoadingResource] = useState(null);
 
-  const handleResourceClick = async (url, type) => {
-    if (!url || url.trim() === '') return;
+  // ✅ Clean leading `a` or spaces in URL
+  const cleanUrl = (val) => val?.trim().replace(/^ahttps/, 'https');
+
+  const handleResourceClick = async (rawUrl, type) => {
+    const url = cleanUrl(rawUrl);
+    if (!url) return;
 
     setLoadingResource(type);
-    
-    // For YouTube videos, ask for permission first
-    if (type === 'lecture' && url.includes('youtube.com' || 'youtu.be')) {
-      const confirm = window.confirm(
+
+    // ✅ Correct YouTube detection
+    if (
+      type === 'lecture' &&
+      (url.includes('youtube.com') || url.includes('youtu.be'))
+    ) {
+      const ok = window.confirm(
         'This will open YouTube in a new tab. Do you want to continue?'
       );
-      
-      if (!confirm) {
+      if (!ok) {
         setLoadingResource(null);
         return;
       }
     }
 
     try {
-      // Small delay to show loading state
       setTimeout(() => {
         window.open(url, '_blank', 'noopener,noreferrer');
         setLoadingResource(null);
