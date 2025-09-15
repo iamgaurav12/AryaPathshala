@@ -53,7 +53,11 @@ const Footer = () => {
                   Class 10 Materials
                 </a>
               </li>
-              
+              <li>
+                <a href="/gaurav" className="text-gray-400 hover:text-white transition-colors duration-200 text-xs opacity-50">
+                  Admin Portal
+                </a>
+              </li>
             </ul>
           </div>
 

@@ -1,7 +1,8 @@
 // src/components/common/Header.jsx
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
+import { useStudentAuth } from '../../context/StudentAuthContext';
 import { 
   BookOpen, 
   Menu, 
@@ -9,13 +10,18 @@ import {
   Sun, 
   Moon,
   Home,
-  GraduationCap
+  GraduationCap,
+  LogIn,
+  LogOut,
+  UserPlus
 } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { darkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { currentStudent, logout } = useStudentAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -77,6 +83,56 @@ const Header = () => {
 
           {/* Right side controls */}
           <div className="flex items-center space-x-4">
+            {/* Authentication Controls */}
+            {currentStudent ? (
+              <div className="flex items-center space-x-2">
+                <span className={`px-3 py-2 ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  {currentStudent.name || 'Student'}
+                </span>
+                <button
+                  onClick={async () => {
+                    await logout();
+                    navigate('/');
+                  }}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link
+                  to="/student/login"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Link>
+                <Link
+                  to="/student/signup"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <UserPlus className="h-4 w-4" />
+                  <span>Sign Up</span>
+                </Link>
+              </div>
+            )}
+
             {/* Theme Toggle */}
             <button
               onClick={toggleDarkMode}
@@ -131,6 +187,52 @@ const Header = () => {
                   </Link>
                 );
               })}
+
+              {/* Mobile Authentication Controls */}
+              {currentStudent ? (
+                <button
+                  onClick={async () => {
+                    await logout();
+                    navigate('/');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium w-full ${
+                    darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
+              ) : (
+                <>
+                  <Link
+                    to="/student/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium ${
+                      darkMode
+                        ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <LogIn className="h-5 w-5" />
+                    <span>Login</span>
+                  </Link>
+                  <Link
+                    to="/student/signup"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium ${
+                      darkMode
+                        ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <UserPlus className="h-5 w-5" />
+                    <span>Sign Up</span>
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}
