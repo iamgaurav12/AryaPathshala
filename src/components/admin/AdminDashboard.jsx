@@ -1,5 +1,5 @@
 // src/components/admin/AdminDashboard.jsx
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useFirestore } from '../../hooks/useFirestore';
 import { useTheme } from '../../hooks/useTheme';
 import ChapterManager from './ChapterManager';
@@ -13,6 +13,73 @@ import {
   AlertCircle,
   CheckCircle
 } from 'lucide-react';
+
+// Memoized chapter item component to prevent unnecessary re-renders
+const ChapterItem = memo(({ 
+  chapter, 
+  selected, 
+  darkMode, 
+  onSelect, 
+  onEdit, 
+  onDelete 
+}) => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    onSelect(chapter);
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onEdit(chapter);
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDelete(chapter.id);
+  };
+
+  return (
+    <div
+      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+        selected
+          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+          : darkMode
+          ? 'border-gray-600 hover:border-gray-500 hover:bg-gray-700'
+          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+      }`}
+      onClick={handleClick}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-medium truncate">{chapter.title}</h3>
+          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>
+            {chapter.subject || 'General'}
+          </p>
+        </div>
+        <div className="flex items-center space-x-1 ml-2">
+          <button
+            onClick={handleEdit}
+            className={`p-1 rounded ${
+              darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
+            }`}
+          >
+            <Edit3 className="h-4 w-4" />
+          </button>
+          <button
+            onClick={handleDelete}
+            className={`p-1 rounded ${
+              darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
+            } text-red-500`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
 
 const AdminDashboard = () => {
   const [selectedClass, setSelectedClass] = useState('class9');
@@ -166,52 +233,19 @@ const AdminDashboard = () => {
             ) : (
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {chapters.map((chapter) => (
-                  <div
+                  <ChapterItem
                     key={chapter.id}
-                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedChapter?.id === chapter.id
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : darkMode
-                        ? 'border-gray-600 hover:border-gray-500 hover:bg-gray-700'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                    onClick={() => handleChapterSelect(chapter)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium truncate">{chapter.title}</h3>
-                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>
-                          {chapter.subject || 'General'}
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-1 ml-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedChapter(chapter);
-                            setIsEditing(true);
-                            setShowAddForm(false);
-                          }}
-                          className={`p-1 rounded ${
-                            darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
-                          }`}
-                        >
-                          <Edit3 className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteChapter(chapter.id);
-                          }}
-                          className={`p-1 rounded ${
-                            darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
-                          } text-red-500`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    chapter={chapter}
+                    selected={selectedChapter?.id === chapter.id}
+                    darkMode={darkMode}
+                    onSelect={handleChapterSelect}
+                    onEdit={(chapter) => {
+                      setSelectedChapter(chapter);
+                      setIsEditing(true);
+                      setShowAddForm(false);
+                    }}
+                    onDelete={handleDeleteChapter}
+                  />
                 ))}
                 
                 {chapters.length === 0 && (
