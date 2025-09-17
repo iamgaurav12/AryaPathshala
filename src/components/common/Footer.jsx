@@ -47,7 +47,7 @@ const Footer = () => {
                   Home
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/class9" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                   Class 9 Materials
                 </a>
@@ -56,7 +56,7 @@ const Footer = () => {
                 <a href="/class10" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                   Class 10 Materials
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="/gaurav" className="text-gray-400 hover:text-white transition-colors duration-200 text-xs opacity-50">
                   Admin Portal
