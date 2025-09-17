@@ -70,7 +70,7 @@ const StudentSignup = () => {
       <div className="relative max-w-md w-full rounded-2xl p-8 space-y-8 bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-[0_0_15px_rgba(49,120,198,0.2)] hover:shadow-[0_0_20px_rgba(49,120,198,0.3)] transition-all duration-300">
         <div>
           <h2 className="text-center text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
-            Join AryaPathshala
+            Join Arya Pathshala
           </h2>
           <p className="mt-2 text-center text-sm text-blue-300/80">
             Create your account to start learning

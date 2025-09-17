@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BookOpen, Users, Award, ArrowRight, Star, Play, FileText, PenTool } from 'lucide-react';
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const handleClassNavigation = (classRoute) => {
+    navigate(classRoute);
+  };
 
   const features = [
     {
@@ -152,10 +158,10 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Course Selection Cards */}
+          {/* Course Selection Cards - Updated with navigation */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-2xl mx-auto mb-8 sm:mb-12">
             <button 
-              onClick={() => alert('Navigate to Class 9')}
+              onClick={() => handleClassNavigation('/class9')}
               className="group relative overflow-hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-white/20 w-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -175,7 +181,7 @@ const Home = () => {
             </button>
 
             <button 
-              onClick={() => alert('Navigate to Class 10')}
+              onClick={() => handleClassNavigation('/class10')}
               className="group relative overflow-hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-white/20 w-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -269,10 +275,10 @@ const Home = () => {
             {[
               { name: "Navneet Bhaiya", image: "navneet.jpg", role: "Mathematics Expert", experience: "5+ Years Experience" },
               { name: "Pavan Bhaiya", image: "pavan.jpg", role: "English Expert", experience: "12+ Years Experience" },
-              { name: "Prem Bhaiya", image: "prem.jpg", role: "Biology(Science) Specialist", experience: "5+ Years Experience" },
-              { name: "Vaibhav Bhaiya", image: "vaibhav.jpg", role: "Physics(Science) Specialist", experience: "5+ Years Experience" },
-              { name: "Gaurav Bhaiya", image: "gaurav.jpg", role: "Chemistry(Science) Specialist", experience: "5+ Years Experience" },
-              { name: "Soni Di", image: "sonya.jpg", role: "Biology Expert", experience: "5+ Years Experience" },
+              { name: "Prem Bhaiya", image: "prem.jpg", role: "Biology Expert", experience: "5+ Years Experience" },
+              { name: "Vaibhav Bhaiya", image: "vaibhav.jpg", role: "Physics Expert", experience: "5+ Years Experience" },
+              { name: "Gaurav Bhaiya", image: "gaurav.jpg", role: "Chemistry Expert", experience: "5+ Years Experience" },
+              { name: "Soni Di", image: "sonya.jpg", role: "Social Science Expert", experience: "5+ Years Experience" },
             ].map((teacher, index) => (
               <div 
                 key={index}
