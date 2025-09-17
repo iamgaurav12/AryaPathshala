@@ -101,3 +101,4 @@ export const AuthProvider = ({ children }) => {
 // Export the context for direct use if needed
 export { AuthContext };
 export default AuthContext;
+
