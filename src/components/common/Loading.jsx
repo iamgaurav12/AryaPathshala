@@ -2,6 +2,24 @@
 import React from 'react';
 import { useTheme } from '../../hooks/useTheme';
 
+const LoadingSpinner = ({ size = 'md' }) => {
+  const sizes = {
+    sm: 'w-4 h-4 border-2',
+    md: 'w-8 h-8 border-3',
+    lg: 'w-16 h-16 border-4'
+  };
+  
+  const sizeClass = sizes[size] || sizes.md;
+  
+  return (
+    <div className="relative inline-block">
+      <div className={`${sizeClass} border-gray-200 dark:border-gray-700 rounded-full animate-spin`}></div>
+      <div className={`${sizeClass} border-blue-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0`}></div>
+    </div>
+  );
+};
+
+// Full-page loading component
 const Loading = ({ message = "Loading..." }) => {
   const { darkMode } = useTheme();
 
@@ -30,4 +48,5 @@ const Loading = ({ message = "Loading..." }) => {
   );
 };
 
+export { LoadingSpinner };
 export default Loading;

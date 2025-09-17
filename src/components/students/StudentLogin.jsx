@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useStudentAuth } from '../../context/StudentAuthContext';
+import { Dialog } from '@headlessui/react';
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetError, setResetError] = useState('');
   
-  const { login } = useStudentAuth();
+  const { login, resetPassword } = useStudentAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,6 +25,41 @@ const StudentLogin = () => {
       navigate('/dashboard'); // Navigate to student dashboard after login
     } catch (err) {
       setError('Failed to sign in: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      setResetError('');
+      setLoading(true);
+      console.log('Starting password reset process for:', resetEmail);
+      await resetPassword(resetEmail);
+      console.log('Password reset email sent successfully');
+      setResetSuccess(true);
+      // Keep the modal open to show success message
+    } catch (err) {
+      console.error('Password reset error occurred:', err);
+      let errorMessage = 'Failed to send reset email: ';
+      
+      // Provide more user-friendly error messages
+      switch(err.code) {
+        case 'auth/user-not-found':
+          errorMessage += 'No account exists with this email address.';
+          break;
+        case 'auth/invalid-email':
+          errorMessage += 'Please enter a valid email address.';
+          break;
+        case 'auth/too-many-requests':
+          errorMessage += 'Too many attempts. Please try again later.';
+          break;
+        default:
+          errorMessage += err.message;
+      }
+      
+      setResetError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -106,8 +146,17 @@ const StudentLogin = () => {
             </button>
           </div>
 
-          {/* Sign up link */}
-          <div className="mt-6 text-center">
+          {/* Links */}
+          <div className="mt-6 text-center space-y-4">
+            <p className="text-blue-300/70">
+              <button 
+                type="button"
+                onClick={() => setIsResetModalOpen(true)}
+                className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text hover:from-blue-300 hover:to-cyan-300"
+              >
+                Forgot Password?
+              </button>
+            </p>
             <p className="text-blue-300/70">
               Don't have an account?{' '}
               <Link 
@@ -119,6 +168,87 @@ const StudentLogin = () => {
             </p>
           </div>
         </form>
+
+        {/* Reset Password Modal */}
+        <Dialog
+          open={isResetModalOpen}
+          onClose={() => {
+            setIsResetModalOpen(false);
+            setResetEmail('');
+            setResetError('');
+            setResetSuccess(false);
+          }}
+          className="relative z-50"
+        >
+          <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
+
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="mx-auto max-w-sm rounded-2xl bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700 p-6 shadow-[0_0_15px_rgba(49,120,198,0.2)]">
+              <Dialog.Title className="text-xl font-semibold text-blue-100 mb-4">
+                Reset Password
+              </Dialog.Title>
+
+              {resetSuccess ? (
+                <div className="space-y-4">
+                  <p className="text-green-400">
+                    Password reset email sent! Check your inbox for further instructions.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsResetModalOpen(false);
+                      setResetEmail('');
+                      setResetSuccess(false);
+                    }}
+                    className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleResetPassword} className="space-y-4">
+                  {resetError && (
+                    <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 text-red-300 px-4 py-3 rounded-lg relative shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+                      {resetError}
+                    </div>
+                  )}
+
+                  <div>
+                    <label htmlFor="reset-email" className="block text-sm font-medium text-blue-300 mb-1">
+                      Email address
+                    </label>
+                    <input
+                      id="reset-email"
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                      className="w-full px-4 py-2 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsResetModalOpen(false)}
+                      className="flex-1 py-2 px-4 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50"
+                    >
+                      {loading ? 'Sending...' : 'Send Reset Link'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </Dialog.Panel>
+          </div>
+        </Dialog>
       </div>
     </div>
   );

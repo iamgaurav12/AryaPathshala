@@ -70,11 +70,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Logout function
-  const logout = () => {
-    localStorage.removeItem('admin_auth');
-    setIsAuthenticated(false);
-    setUser(null);
-    setLoading(false); // <- prevents "Verifying access" after logout
+  const logout = async () => {
+    try {
+      // Clear local storage first
+      localStorage.removeItem('admin_auth');
+      
+      // Clear the state
+      setIsAuthenticated(false);
+      setUser(null);
+      setLoading(false);
+
+      // Return success
+      return true;
+    } catch (error) {
+      console.error('Logout error:', error);
+      return false;
+    }
   };
 
   // Check if user is admin

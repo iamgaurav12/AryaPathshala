@@ -5,7 +5,7 @@ export const APP_INFO = {
   description: 'Quality Education Platform for 9th and 10th Grade Students',
   author: 'Aryapathshala Team',
   website: 'https://aryapathshala.com',
-  supportEmail: 'support@aryapathshala.com',
+  supportEmail: 'aryapathshala233@gmail.com',
   motto: 'Empowering Students for a Brighter Future'
 };
 
@@ -427,9 +427,9 @@ export const SOCIAL_LINKS = {
 
 // Contact Information
 export const CONTACT_INFO = {
-  EMAIL: 'contact@aryapathshala.com',
-  PHONE: '+91 98765 43210',
-  ADDRESS: 'Chandigarh, Punjab, India',
+  EMAIL: 'aryapathshala233@gmail.com',
+  PHONE: '+91 93523 95638',
+  ADDRESS: 'Greater Noida, UP, India',
   SUPPORT_HOURS: 'Mon-Sat: 9:00 AM - 8:00 PM'
 };
 

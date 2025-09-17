@@ -77,12 +77,13 @@ const ChapterManager = ({
 
   // ---------- input change ----------
   const handleInputChange = (field, value) => {
-    setFormData((prev) =>
-      prev[field] === value ? prev : { ...prev, [field]: value }
-    );
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
 
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: '' }));
+      setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
 
@@ -127,7 +128,16 @@ const ChapterManager = ({
         <textarea
           id={field}
           value={formData[field]}
-          onChange={(e) => handleInputChange(field, e.target.value)}
+          onChange={e => {
+            const newValue = e.target.value;
+            setFormData(prev => ({
+              ...prev,
+              [field]: newValue
+            }));
+            if (errors[field]) {
+              setErrors(prev => ({ ...prev, [field]: '' }));
+            }
+          }}
           placeholder={placeholder}
           rows={3}
           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
@@ -142,7 +152,16 @@ const ChapterManager = ({
         <select
           id={field}
           value={formData[field] || 'Mathematics'}
-          onChange={(e) => handleInputChange(field, e.target.value)}
+          onChange={e => {
+            const newValue = e.target.value;
+            setFormData(prev => ({
+              ...prev,
+              [field]: newValue
+            }));
+            if (errors[field]) {
+              setErrors(prev => ({ ...prev, [field]: '' }));
+            }
+          }}
           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
             errors[field]
               ? 'border-red-500'
@@ -162,7 +181,16 @@ const ChapterManager = ({
           id={field}
           type={type}
           value={formData[field]}
-          onChange={(e) => handleInputChange(field, e.target.value)}
+          onChange={e => {
+            const newValue = e.target.value;
+            setFormData(prev => ({
+              ...prev,
+              [field]: newValue
+            }));
+            if (errors[field]) {
+              setErrors(prev => ({ ...prev, [field]: '' }));
+            }
+          }}
           placeholder={placeholder}
           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
             errors[field]
@@ -283,7 +311,7 @@ const ChapterManager = ({
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-sm hover:shadow"
           >
             <Save className="h-4 w-4" />
             <span>{saving ? 'Saving...' : 'Save Chapter'}</span>

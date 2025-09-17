@@ -155,12 +155,20 @@ const AdminDashboard = () => {
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Header */}
-      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b`}>
+      <div className={`sticky top-16 z-40 ${
+        darkMode 
+          ? 'bg-gray-900/95 backdrop-blur border-gray-700' 
+          : 'bg-white/95 backdrop-blur border-gray-200'
+        } border-b shadow-sm`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <BookOpen className="h-8 w-8 text-blue-500" />
-              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+                <BookOpen className="h-5 w-5 text-white" />
+              </div>
+              <h1 className={`text-xl font-bold ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>Content Management</h1>
             </div>
             
             {/* Class Selector */}
@@ -203,19 +211,25 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Panel - Chapter List */}
-          <div className={`lg:col-span-1 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow p-6`}>
+          <div className={`lg:col-span-1 ${
+            darkMode 
+              ? 'bg-gray-800/50 backdrop-blur border-gray-700' 
+              : 'bg-white/50 backdrop-blur border-gray-200'
+            } rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 p-6`}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Chapters</h2>
+              <h2 className={`text-xl font-bold ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>Chapters</h2>
               <button
                 onClick={() => {
                   setShowAddForm(true);
                   setSelectedChapter(null);
                   setIsEditing(false);
                 }}
-                className="flex items-center space-x-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add</span>
@@ -258,7 +272,11 @@ const AdminDashboard = () => {
           </div>
 
           {/* Right Panel - Chapter Details/Editor */}
-          <div className={`lg:col-span-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow p-6`}>
+          <div className={`lg:col-span-2 ${
+            darkMode 
+              ? 'bg-gray-800/50 backdrop-blur border-gray-700' 
+              : 'bg-white/50 backdrop-blur border-gray-200'
+            } rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 p-6`}>
             {showAddForm ? (
               <ChapterManager
                 onSave={handleAddChapter}

@@ -14,8 +14,12 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
-                <GraduationCap className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500/20 bg-white/5">
+                <img
+                  src="/logo_arya.jpg"
+                  alt="Arya Pathshala Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold font-display">Arya Pathshala</h3>
@@ -67,11 +71,11 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-sm text-gray-300">
                 <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                <span>contact@aryapathshala.com</span>
+                <span>aryapathshala233@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-gray-300">
                 <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>+91 93523 95638 (Navneet Bhaiya)</span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-gray-300">
                 <MapPin className="h-4 w-4 text-red-400 flex-shrink-0" />

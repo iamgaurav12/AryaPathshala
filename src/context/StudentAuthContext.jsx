@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from '../firebase/auth';
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from '../firebase/auth';
 import { db } from '../firebase/config';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
@@ -80,13 +80,42 @@ export const StudentAuthProvider = ({ children }) => {
     }
   };
 
+  const resetPassword = async (email) => {
+    try {
+      setError(null);
+      console.log('Attempting to send reset email to:', email);
+      
+      // Add configuration options for password reset
+      const actionCodeSettings = {
+        url: window.location.origin + '/student/login', // Redirect back to login page
+        handleCodeInApp: true
+      };
+      
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      console.log('Reset email sent successfully');
+      console.log('Please check these locations for the email:');
+      console.log('1. Main inbox');
+      console.log('2. Spam/Junk folder');
+      console.log('3. Promotions tab (if using Gmail)');
+      console.log('4. Updates/Forum tab (if using Gmail)');
+      
+    } catch (err) {
+      console.error('Reset password error:', err);
+      console.error('Error code:', err.code);
+      console.error('Error message:', err.message);
+      setError(err.message);
+      throw err;
+    }
+  };
+
   const value = {
     currentStudent,
     loading,
     error,
     signup,
     login,
-    logout
+    logout,
+    resetPassword
   };
 
   return (

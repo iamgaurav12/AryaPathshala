@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.role == 'admin';
+    }
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user is the owner of the document
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Courses collection
+    match /courses/{courseId} {
+      allow read: if true; // Courses are publicly readable
+      // Add data validation for course creation/updates
+      allow create, update: if isAdmin() &&
+        request.resource.data.keys().hasAll(['title', 'description', 'status']) &&
+        request.resource.data.title is string &&
+        request.resource.data.description is string &&
+        request.resource.data.status in ['draft', 'published', 'archived'];
+      allow delete: if isAdmin();
+      
+      // Chapters subcollection
+      match /chapters/{chapterId} {
+        allow read: if true; // Chapters are publicly readable
+        // Add data validation for chapter creation/updates
+        allow create, update: if isAdmin() &&
+          request.resource.data.keys().hasAll(['title', 'order', 'status']) &&
+          request.resource.data.title is string &&
+          request.resource.data.order is number &&
+          request.resource.data.status in ['draft', 'published', 'archived'];
+        allow delete: if isAdmin();
+        
+        // Resources subcollection
+        match /resources/{resourceId} {
+          allow read: if true;
+          // Add data validation for resource creation/updates
+          allow create, update: if isAdmin() &&
+            request.resource.data.keys().hasAll(['title', 'type', 'content']) &&
+            request.resource.data.title is string &&
+            request.resource.data.type in ['text', 'video', 'pdf', 'quiz'];
+          allow delete: if isAdmin();
+        }
+      }
+    }
+
+    // Students collection
+    match /students/{studentId} {
+      allow read: if isOwner(studentId) || isAdmin();
+      // Only allow creation if the user is creating their own profile
+      allow create: if isAuthenticated() && request.auth.uid == studentId;
+      allow update: if isOwner(studentId) || isAdmin();
+      // Only admins can delete student profiles
+      allow delete: if isAdmin();
+
+      // Progress subcollection
+      match /progress/{progressId} {
+        allow read: if isOwner(studentId) || isAdmin();
+        // Validate data structure for progress updates
+        allow create, update: if (isOwner(studentId) || isAdmin()) &&
+          request.resource.data.keys().hasAll(['timestamp', 'chapterId', 'status']) &&
+          request.resource.data.timestamp is timestamp &&
+          request.resource.data.status in ['started', 'in-progress', 'completed'];
+        // Only admins can delete progress records
+        allow delete: if isAdmin();
+      }
+    }
+
+    // Protected resources
+    match /protected/{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

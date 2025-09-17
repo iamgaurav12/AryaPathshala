@@ -1,7 +1,7 @@
 // src/pages/AdminLogin.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuthContext';
 import { useTheme } from '../hooks/useTheme';
 import { Lock, Eye, EyeOff, Shield, AlertCircle } from 'lucide-react';
 
@@ -34,7 +34,7 @@ const AdminLogin = () => {
       });
       
       if (success) {
-        navigate('/admin/dashboard');
+        navigate('/admin/authenticated');
       } else {
         setError('Invalid password. Please try again.');
       }
