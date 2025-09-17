@@ -1,0 +1,38 @@
+# robots.txt for Arya Pathshala
+# This file tells search engines which pages they can crawl
+
+# Allow all web crawlers to access all content
+User-agent: *
+Allow: /
+
+# Disallow access to admin areas for security
+Disallow: /gaurav
+Disallow: /admin/
+
+# Disallow crawling of authentication pages for better security
+Disallow: /student/login
+Disallow: /student/signup
+
+# Allow crawling of main educational content (even though protected)
+# This helps with SEO while actual access requires authentication
+Allow: /class9
+Allow: /class10
+
+# Specify the location of your sitemap
+Sitemap: https://arya-pathshala.vercel.app/sitemap.xml
+
+# Crawl-delay (optional - adds a delay between requests)
+# Crawl-delay: 1
+
+# Additional directives for specific bots (optional)
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Block any malicious bots (optional)
+User-agent: BadBot
+Disallow: /
