@@ -7,7 +7,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
+// import { ThemeProvider } from './context/ThemeContext'; // REMOVED: Theme switching logic is no longer needed
 import { DataProvider } from './context/DataContext';
 import { AuthProvider } from './context/AuthContext';
 import { StudentAuthProvider } from './context/StudentAuthContext';
@@ -31,12 +31,13 @@ import './App.css';
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
+      {/* <ThemeProvider> - REMOVED, as theme logic was removed from components */}
         <DataProvider>
           <AuthProvider>
             <StudentAuthProvider>
               <Router>
-                <div className="App min-h-screen flex flex-col">
+                {/* 1. APP CONTAINER BACKGROUND: Set the overall app shell background to black */}
+                <div className="App min-h-screen flex flex-col bg-black">
                   <Header />
                   
                   <main className="flex-grow">
@@ -75,7 +76,7 @@ function App() {
             </StudentAuthProvider>
           </AuthProvider>
         </DataProvider>
-      </ThemeProvider>
+      {/* </ThemeProvider> - REMOVED */}
     </ErrorBoundary>
   );
 }

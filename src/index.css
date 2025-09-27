@@ -16,12 +16,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #000000; /* Dark primary background */
+  /* ENFORCED PURE BLACK BACKGROUND */
+  background: #000000;
   color: #FFFFFF; /* Default white text */
 }
 
 html {
   scroll-behavior: smooth;
+  /* ENFORCED PURE BLACK BACKGROUND */
+  background: #000000; 
 }
 
 /* Custom Dark Theme Scrollbar */
@@ -29,11 +32,13 @@ html {
   width: 12px;
 }
 
+/* Scrollbar Track: Very dark black to blend with the pure black theme */
 ::-webkit-scrollbar-track {
-  background-color: #111111;
+  background-color: #0A0A0A; 
   border-radius: 6px;
 }
 
+/* Scrollbar Thumb: Yellow accent */
 ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 215, 0, 0.6);
   border-radius: 6px;
@@ -48,13 +53,13 @@ html {
 }
 
 ::-webkit-scrollbar-corner {
-  background-color: #111111;
+  background-color: #0A0A0A;
 }
 
 /* Firefox Scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 215, 0, 0.6) #111111;
+  scrollbar-color: rgba(255, 215, 0, 0.6) #0A0A0A;
 }
 
 /* Enhanced Animation Classes */
@@ -78,14 +83,15 @@ html {
   animation: floatGolden 6s ease-in-out infinite;
 }
 
-/* Golden Gradient Text */
+/* Golden Gradient Text (assuming yellow-primary, secondary, tertiary are defined in Tailwind config) */
 .gradient-text {
   @apply bg-gradient-to-r from-yellow-primary via-yellow-secondary to-yellow-tertiary bg-clip-text text-transparent;
   filter: brightness(1.1);
 }
 
+/* PURE GOLDEN GRADIENT TEXT: Ensures no bluish/orange tones are used in the core gradient */
 .golden-gradient-text {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+  background: linear-gradient(135deg, #FFD700 0%, #FFC700 50%, #FFE87C 100%); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -124,6 +130,7 @@ html {
   box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2), 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
+/* Assuming yellow-primary/secondary/hover are defined in Tailwind config */
 .btn-golden {
   @apply bg-gradient-to-r from-yellow-primary to-yellow-secondary text-black font-medium;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -187,12 +194,13 @@ html {
 
 .animate-blob-golden {
   animation: blob-golden 8s infinite;
-  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+  /* Ensured gradient is yellow/gold and non-bluish */
+  background: linear-gradient(45deg, #FFD700, #FFC700, #FFE87C);
 }
 
-/* Enhanced Focus Styles */
+/* Enhanced Focus Styles (Assuming yellow-primary/dark-primary are defined in Tailwind config) */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-yellow-primary focus:ring-offset-2 focus:ring-offset-dark-primary;
+  @apply focus:outline-none focus:ring-2 focus:ring-yellow-primary focus:ring-offset-2 focus:ring-offset-black; /* Replaced dark-primary with black */
   transition: all 0.2s ease;
 }
 
@@ -275,7 +283,7 @@ html {
   animation: shimmer 2s infinite;
 }
 
-/* Enhanced Typography */
+/* Enhanced Typography (Assuming yellow-primary is defined in Tailwind config) */
 .text-golden {
   @apply text-yellow-primary;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
@@ -318,7 +326,7 @@ html {
   color: #000000;
 }
 
-/* Smooth Transitions for Theme Changes */
+/* Smooth Transitions for Theme Changes (left this intact for hover/focus states) */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
@@ -326,8 +334,9 @@ html {
 /* Custom Border Gradients */
 .border-gradient-golden {
   border: 2px solid transparent;
+  /* PURE BLACK background */
   background: linear-gradient(#000000, #000000) padding-box,
-              linear-gradient(45deg, #FFD700, #FFA500) border-box;
+              linear-gradient(45deg, #FFD700, #FFC700) border-box; /* Ensured gradient is yellow/gold */
 }
 
 /* Backdrop Blur Support */

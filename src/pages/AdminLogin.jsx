@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuthContext';
-import { useTheme } from '../hooks/useTheme';
 import { Lock, Eye, EyeOff, Shield, AlertCircle, ArrowLeft } from 'lucide-react';
+
 
 const AdminLogin = () => {
   const [password, setPassword] = useState('');
@@ -13,7 +13,7 @@ const AdminLogin = () => {
   
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
-  const { darkMode } = useTheme();
+  // const { darkMode } = useTheme(); // COMMENTED OUT: We are forcing dark mode
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -47,74 +47,69 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
-      darkMode ? 'bg-dark-primary' : 'bg-gray-50'
-    }`}>
+    // FORCED DARK MODE: Replaced conditional with the pure black class
+    <div className={`min-h-screen flex items-center justify-center p-4 bg-black`}> 
+      
       {/* Background Pattern */}
       <div className="fixed inset-0 z-0">
-        <div className={`absolute inset-0 ${
-          darkMode 
-            ? 'bg-gradient-to-br from-dark-primary via-dark-secondary to-dark-tertiary' 
-            : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
-        }`} />
-        {darkMode && (
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-primary rounded-full mix-blend-multiply filter blur-xl animate-pulse" />
-            <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-yellow-secondary rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000" />
-            <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-yellow-tertiary rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000" />
-          </div>
-        )}
+        <div 
+          // Replaced conditional background gradient with dark colors
+          className={`absolute inset-0 bg-gradient-to-br from-black via-[#0A0A0A] to-[#1A1A1A]`} 
+        />
+        {/* Yellow glowing blobs - Always show, simplified opacity/class names */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700] rounded-full mix-blend-multiply filter blur-xl animate-pulse opacity-15" />
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#FFC700] rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000 opacity-10" />
+          <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-[#FFE87C] rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000 opacity-10" />
+        </div>
       </div>
 
       <div className="relative z-10 max-w-md w-full mx-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 ${
-            darkMode 
-              ? 'bg-yellow-primary/20 shadow-yellow-glow animate-pulse' 
-              : 'bg-blue-100'
-          }`}>
-            <Shield className={`h-10 w-10 ${
-              darkMode ? 'text-yellow-primary' : 'text-blue-500'
-            }`} />
+          <div 
+            // Icon container: Yellow accent on dark base
+            className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 bg-[#FFD700]/20 shadow-[0_0_20px_rgba(255,215,0,0.5)] animate-pulse`}
+          >
+            {/* Icon color: Primary yellow */}
+            <Shield className={`h-10 w-10 text-[#FFD700]`} /> 
           </div>
           
-          <h1 className={`text-3xl font-bold mb-3 ${
-            darkMode ? 'text-dark-primary' : 'text-gray-900'
-          }`}>
+          <h1 
+            // Title text color: White
+            className={`text-3xl font-bold mb-3 text-white`}
+          >
             Admin Access
           </h1>
           
-          <p className={`text-base ${
-            darkMode ? 'text-dark-muted' : 'text-gray-600'
-          }`}>
+          <p 
+            // Subtitle text color: Muted grey
+            className={`text-base text-gray-400`}
+          >
             Enter your password to access the AryaPathshala admin panel
           </p>
         </div>
 
-        {/* Login Form */}
-        <div className={`rounded-2xl p-8 backdrop-blur-lg border transition-all duration-300 ${
-          darkMode 
-            ? 'bg-dark-card/90 shadow-dark-elevation-lg border-dark-primary shadow-yellow-glow/50' 
-            : 'bg-white shadow-lg border-gray-200'
-        }`}>
+        {/* Login Form Card */}
+        <div 
+          // Card background: Very dark grey, subtle yellow shadow/border
+          className={`rounded-2xl p-8 backdrop-blur-lg border transition-all duration-300 bg-[#0a0a0a]/90 shadow-[0_0_20px_rgba(255,215,0,0.2)] border-[#1a1a1a]`}
+        >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Password Field */}
             <div>
               <label 
                 htmlFor="password"
-                className={`block text-sm font-medium mb-3 ${
-                  darkMode ? 'text-dark-secondary' : 'text-gray-700'
-                }`}
+                // Label color: Light grey
+                className={`block text-sm font-medium mb-3 text-gray-300`}
               >
                 Admin Password
               </label>
               
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className={`h-5 w-5 transition-colors ${
-                    darkMode ? 'text-dark-muted' : 'text-gray-400'
-                  }`} />
+                  {/* Lock icon color: Muted grey */}
+                  <Lock className={`h-5 w-5 transition-colors text-gray-500`} />
                 </div>
                 
                 <input
@@ -122,14 +117,11 @@ const AdminLogin = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  // Input styles: Dark background, light text, yellow focus ring
                   className={`w-full pl-10 pr-12 py-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:border-transparent ${
                     error 
-                      ? darkMode 
-                        ? 'border-red-500 bg-red-900/20 text-dark-primary focus:ring-red-500' 
-                        : 'border-red-500 bg-red-50 text-gray-900 focus:ring-red-500'
-                      : darkMode 
-                      ? 'border-dark-primary bg-dark-tertiary/70 text-dark-primary hover:border-yellow-primary/50 focus:ring-yellow-primary focus:border-yellow-primary' 
-                      : 'border-gray-300 bg-white text-gray-900 focus:ring-blue-500'
+                      ? 'border-red-500 bg-red-900/20 text-white focus:ring-red-500' // Error state
+                      : 'border-[#333333] bg-black/70 text-white hover:border-[#444444] focus:ring-[#FFD700] focus:border-[#FFD700]' // Normal state
                   }`}
                   placeholder="Enter your admin password"
                   required
@@ -138,11 +130,8 @@ const AdminLogin = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute inset-y-0 right-0 pr-3 flex items-center transition-colors duration-200 ${
-                    darkMode 
-                      ? 'text-dark-muted hover:text-yellow-primary' 
-                      : 'text-gray-400 hover:text-gray-600'
-                  }`}
+                  // Show/Hide button: Muted grey hover yellow
+                  className={`absolute inset-y-0 right-0 pr-3 flex items-center transition-colors duration-200 text-gray-500 hover:text-[#FFD700]`}
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -155,11 +144,10 @@ const AdminLogin = () => {
 
             {/* Error Message */}
             {error && (
-              <div className={`flex items-center space-x-3 p-3 rounded-lg border transition-all duration-300 ${
-                darkMode 
-                  ? 'bg-red-900/30 border-red-500/50 text-red-400' 
-                  : 'bg-red-50 border-red-200 text-red-600'
-              }`}>
+              <div 
+                // Error box: Dark red background, red text
+                className={`flex items-center space-x-3 p-3 rounded-lg border transition-all duration-300 bg-red-900/30 border-red-500/50 text-red-400`}
+              >
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 <span className="text-sm font-medium">{error}</span>
               </div>
@@ -169,19 +157,13 @@ const AdminLogin = () => {
             <button
               type="submit"
               disabled={loading || !password.trim()}
-              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                darkMode
-                  ? 'bg-gradient-to-r from-yellow-primary to-yellow-secondary text-black shadow-yellow-glow hover:shadow-yellow-glow-lg hover:from-yellow-hover hover:to-yellow-primary focus:ring-yellow-primary focus:ring-offset-dark-card'
-                  : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500 focus:ring-offset-white'
-              }`}
+              // Button: Yellow gradient background, black text, yellow shadow
+              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-gradient-to-r from-[#FFD700] to-[#FFC700] text-black shadow-[0_0_15px_rgba(255,215,0,0.4)] hover:shadow-[0_0_25px_rgba(255,215,0,0.6)] hover:from-[#FFE87C] hover:to-[#FFD700] focus:ring-[#FFD700] focus:ring-offset-[#0a0a0a]`}
             >
               {loading ? (
                 <>
-                  <div className={`animate-spin rounded-full h-5 w-5 border-2 ${
-                    darkMode 
-                      ? 'border-black border-t-transparent' 
-                      : 'border-white border-t-transparent'
-                  }`} />
+                  {/* Spinner: Black color to stand out on yellow */}
+                  <div className={`animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent`} />
                   <span>Authenticating...</span>
                 </>
               ) : (
@@ -194,17 +176,20 @@ const AdminLogin = () => {
           </form>
 
           {/* Footer */}
-          <div className={`mt-6 pt-6 border-t text-center ${
-            darkMode ? 'border-dark-primary' : 'border-gray-200'
-          }`}>
-            <p className={`text-sm ${
-              darkMode ? 'text-dark-muted' : 'text-gray-600'
-            }`}>
+          <div 
+            // Footer border: Dark grey
+            className={`mt-6 pt-6 border-t border-[#1a1a1a] text-center`}
+          >
+            <p 
+              // Footer text: Muted grey
+              className={`text-sm text-gray-400`}
+            >
               🔒 Authorized access only
             </p>
-            <p className={`text-xs mt-2 ${
-              darkMode ? 'text-dark-muted' : 'text-gray-500'
-            }`}>
+            <p 
+              // Footer text: Muted grey
+              className={`text-xs mt-2 text-gray-500`}
+            >
               Contact administrator if you need access to AryaPathshala
             </p>
           </div>
@@ -214,11 +199,8 @@ const AdminLogin = () => {
         <div className="text-center mt-8">
           <button
             onClick={() => navigate('/')}
-            className={`inline-flex items-center space-x-2 font-medium transition-all duration-300 hover:scale-105 ${
-              darkMode 
-                ? 'text-yellow-primary hover:text-yellow-hover' 
-                : 'text-blue-500 hover:text-blue-600'
-            }`}
+            // Back button: Yellow text, yellow hover
+            className={`inline-flex items-center space-x-2 font-medium transition-all duration-300 hover:scale-105 text-[#FFD700] hover:text-[#FFE87C]`}
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>

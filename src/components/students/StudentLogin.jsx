@@ -66,15 +66,22 @@ const StudentLogin = () => {
   };
 
   return (
+    // 1. MAIN BACKGROUND: Set to pure black #000000
     <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
-      {/* Animated background effects */}
+      
+      {/* Animated background effects - Kept yellow with low opacity */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-4 -top-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -right-4 -top-4 w-72 h-72 bg-yellow-600 rounded-full mix-blend-color-dodge filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-400 rounded-full mix-blend-color-dodge filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+        <div className="absolute -left-4 -top-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-15 animate-blob"></div>
+        <div className="absolute -right-4 -top-4 w-72 h-72 bg-yellow-600 rounded-full mix-blend-color-dodge filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-400 rounded-full mix-blend-color-dodge filter blur-3xl opacity-5 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative max-w-md w-full rounded-2xl p-8 space-y-8 bg-gray-900/90 backdrop-blur-xl border border-gray-800 shadow-[0_0_15px_rgba(255,193,7,0.2)] hover:shadow-[0_0_20px_rgba(255,193,7,0.3)] transition-all duration-300">
+      {/* Login Card */}
+      <div 
+        // 2. CARD BACKGROUND: Set to a very dark gray/near black for contrast
+        // Border and shadow use yellow accents
+        className="relative max-w-md w-full rounded-2xl p-8 space-y-8 bg-[#0a0a0a]/90 backdrop-blur-sm border border-[#1a1a1a] shadow-[0_0_15px_rgba(255,255,0,0.2)] hover:shadow-[0_0_20px_rgba(255,255,0,0.3)] transition-all duration-300"
+      >
         <div>
           <h2 className="text-center text-3xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 bg-clip-text text-transparent">
             Welcome Back
@@ -84,14 +91,16 @@ const StudentLogin = () => {
           </p>
         </div>
         
+        {/* Error Message */}
         {error && (
-          <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 text-red-300 px-4 py-3 rounded-lg relative shadow-[0_0_10px_rgba(220,38,38,0.2)]" role="alert">
+          <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 text-red-300 px-4 py-3 rounded-lg relative shadow-[0_0_10px_rgba(255,0,0,0.2)]" role="alert">
             <span className="block sm:inline">{error}</span>
           </div>
         )}
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
+            {/* Email Input */}
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -102,12 +111,14 @@ const StudentLogin = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
+                // 3. INPUT FIELDS: Set to pure black/very dark grey for background
+                className="appearance-none relative block w-full px-4 py-3 bg-black/70 text-white placeholder-gray-500 rounded-lg border border-[#333333] focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,255,0,0.1)] hover:shadow-[inset_0_1px_2px_rgba(255,255,0,0.2)] backdrop-blur-sm transition-all duration-200 text-sm hover:border-[#444444]"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {/* Password Input */}
             <div>
               <label htmlFor="password" className="sr-only">
                 Password
@@ -118,7 +129,8 @@ const StudentLogin = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
+                // 3. INPUT FIELDS: Set to pure black/very dark grey for background
+                className="appearance-none relative block w-full px-4 py-3 bg-black/70 text-white placeholder-gray-500 rounded-lg border border-[#333333] focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,255,0,0.1)] hover:shadow-[inset_0_1px_2px_rgba(255,255,0,0.2)] backdrop-blur-sm transition-all duration-200 text-sm hover:border-[#444444]"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -126,11 +138,13 @@ const StudentLogin = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-black bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500/70 shadow-[0_0_15px_rgba(255,193,7,0.3)] hover:shadow-[0_0_20px_rgba(255,193,7,0.4)] backdrop-blur-xl transition-all duration-200 disabled:opacity-50"
+              // 4. BUTTONS: Yellow background/gradient for main CTA
+              className="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-black bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500/70 shadow-[0_0_15px_rgba(255,255,0,0.3)] hover:shadow-[0_0_20px_rgba(255,255,0,0.4)] backdrop-blur-xl transition-all duration-200 disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center">
@@ -180,10 +194,14 @@ const StudentLogin = () => {
           }}
           className="relative z-50"
         >
-          <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
+          {/* Backdrop: Pure Black with opacity */}
+          <div className="fixed inset-0 bg-black/80" aria-hidden="true" />
 
           <div className="fixed inset-0 flex items-center justify-center p-4">
-            <Dialog.Panel className="mx-auto max-w-sm rounded-2xl bg-gray-900/90 backdrop-blur-xl border border-gray-800 p-6 shadow-[0_0_15px_rgba(255,193,7,0.2)]">
+            {/* Modal Panel: Very dark grey background */}
+            <Dialog.Panel 
+              className="mx-auto max-w-sm rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-sm border border-[#1a1a1a] p-6 shadow-[0_0_15px_rgba(255,255,0,0.2)]"
+            >
               <Dialog.Title className="text-xl font-semibold text-white mb-4">
                 Reset Password
               </Dialog.Title>
@@ -208,7 +226,7 @@ const StudentLogin = () => {
               ) : (
                 <form onSubmit={handleResetPassword} className="space-y-4">
                   {resetError && (
-                    <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 text-red-300 px-4 py-3 rounded-lg relative shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+                    <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 text-red-300 px-4 py-3 rounded-lg relative shadow-[0_0_10px_rgba(255,0,0,0.2)]">
                       {resetError}
                     </div>
                   )}
@@ -223,7 +241,8 @@ const StudentLogin = () => {
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                       required
-                      className="w-full px-4 py-2 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 hover:border-gray-700 transition-all duration-200"
+                      // Input: Dark background, light text, yellow focus ring
+                      className="w-full px-4 py-2 bg-black/70 text-white placeholder-gray-500 rounded-lg border border-[#333333] focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 hover:border-[#444444] transition-all duration-200"
                       placeholder="Enter your email"
                     />
                   </div>
@@ -232,6 +251,7 @@ const StudentLogin = () => {
                     <button
                       type="button"
                       onClick={() => setIsResetModalOpen(false)}
+                      // Button: Dark grey background
                       className="flex-1 py-2 px-4 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200 border border-gray-700"
                     >
                       Cancel
@@ -239,6 +259,7 @@ const StudentLogin = () => {
                     <button
                       type="submit"
                       disabled={loading}
+                      // Button: Yellow background
                       className="flex-1 py-2 px-4 bg-yellow-500 hover:bg-yellow-400 text-black rounded-lg transition-colors duration-200 disabled:opacity-50 font-medium"
                     >
                       {loading ? 'Sending...' : 'Send Reset Link'}
