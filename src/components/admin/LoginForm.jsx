@@ -5,7 +5,6 @@ import { Lock, User, Eye, EyeOff, Shield, AlertCircle } from 'lucide-react';
 // This is a placeholder to simulate the missing AuthContext and resolve the import error.
 const useAuth = () => {
   const login = async (formData) => {
-    console.log('Attempting login with:', formData);
     // Simulate an API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     // Simulate a successful login for demonstration purposes

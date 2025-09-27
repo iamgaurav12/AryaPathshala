@@ -721,7 +721,6 @@ export const performanceUtils = {
     const start = performance.now();
     const result = await func();
     const end = performance.now();
-    console.log(`${label} took ${end - start} milliseconds`);
     return result;
   },
 

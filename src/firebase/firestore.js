@@ -83,7 +83,6 @@ export const addChapter = async (className, chapterData) => {
       updatedAt: serverTimestamp()
     });
     
-    console.log(`Chapter added to ${className} with ID: ${docRef.id}`);
     return docRef.id;
   } catch (error) {
     console.error(`Error adding chapter to ${className}:`, error);
@@ -104,7 +103,6 @@ export const updateChapter = async (className, chapterId, chapterData) => {
       updatedAt: serverTimestamp()
     });
     
-    console.log(`Chapter ${chapterId} updated in ${className}`);
   } catch (error) {
     console.error(`Error updating chapter ${chapterId} in ${className}:`, error);
     throw error;
@@ -121,7 +119,6 @@ export const deleteChapter = async (className, chapterId) => {
     const chapterDoc = doc(db, 'courses', className, 'chapters', chapterId);
     await deleteDoc(chapterDoc);
     
-    console.log(`Chapter ${chapterId} deleted from ${className}`);
   } catch (error) {
     console.error(`Error deleting chapter ${chapterId} from ${className}:`, error);
     throw error;
@@ -146,7 +143,6 @@ export const reorderChapters = async (className, chapters) => {
     });
     
     await batch.commit();
-    console.log(`Chapters reordered in ${className}`);
   } catch (error) {
     console.error(`Error reordering chapters in ${className}:`, error);
     throw error;
@@ -189,13 +185,11 @@ export const initializeClassData = async (className, defaultChapters = []) => {
       throw new Error('Class name is required');
     }
     
-    console.log(`Initializing data for ${className}...`);
     
     const classDoc = doc(db, 'courses', className);
     const classSnapshot = await getDoc(classDoc);
     
     if (!classSnapshot.exists()) {
-      console.log(`Creating new class document: ${className}`);
       
       // Create the class document
       await setDoc(classDoc, {
@@ -206,7 +200,6 @@ export const initializeClassData = async (className, defaultChapters = []) => {
       
       // Add default chapters if provided
       if (defaultChapters && defaultChapters.length > 0) {
-        console.log(`Adding ${defaultChapters.length} default chapters to ${className}`);
         
         const batch = writeBatch(db);
         const chaptersRef = collection(classDoc, 'chapters');
@@ -222,10 +215,9 @@ export const initializeClassData = async (className, defaultChapters = []) => {
         });
         
         await batch.commit();
-        console.log(`Successfully initialized ${className} with ${defaultChapters.length} chapters`);
       }
     } else {
-      console.log(`Class ${className} already exists, skipping initialization`);
+      console.log(`hello`);
     }
   } catch (error) {
     console.error(`Error initializing class data for ${className}:`, error);

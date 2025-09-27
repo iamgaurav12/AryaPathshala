@@ -83,7 +83,6 @@ export const StudentAuthProvider = ({ children }) => {
   const resetPassword = async (email) => {
     try {
       setError(null);
-      console.log('Attempting to send reset email to:', email);
       
       // Add configuration options for password reset
       const actionCodeSettings = {
@@ -92,12 +91,7 @@ export const StudentAuthProvider = ({ children }) => {
       };
       
       await sendPasswordResetEmail(auth, email, actionCodeSettings);
-      console.log('Reset email sent successfully');
-      console.log('Please check these locations for the email:');
-      console.log('1. Main inbox');
-      console.log('2. Spam/Junk folder');
-      console.log('3. Promotions tab (if using Gmail)');
-      console.log('4. Updates/Forum tab (if using Gmail)');
+      
       
     } catch (err) {
       console.error('Reset password error:', err);

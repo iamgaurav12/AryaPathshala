@@ -60,7 +60,6 @@ export const DataProvider = ({ children }) => {
       try {
         dispatch({ type: actionTypes.SET_LOADING, payload: true });
         
-        console.log('Starting data initialization...');
         
         // Initialize both classes with default data
         await Promise.all([
@@ -74,7 +73,6 @@ export const DataProvider = ({ children }) => {
           })
         ]);
         
-        console.log('Data initialization completed successfully');
         dispatch({ type: actionTypes.SET_INITIALIZATION_STATUS, payload: true });
         dispatch({ type: actionTypes.SET_LOADING, payload: false });
         

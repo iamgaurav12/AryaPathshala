@@ -35,9 +35,7 @@ const StudentLogin = () => {
     try {
       setResetError('');
       setLoading(true);
-      console.log('Starting password reset process for:', resetEmail);
       await resetPassword(resetEmail);
-      console.log('Password reset email sent successfully');
       setResetSuccess(true);
     } catch (err) {
       console.error('Password reset error occurred:', err);
