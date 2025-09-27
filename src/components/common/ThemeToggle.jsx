@@ -31,13 +31,13 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-7 bg-gray-200 dark:bg-gray-700 rounded-full p-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
+      className="relative w-14 h-7 bg-gray-200 dark:bg-zinc-800 rounded-full p-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-black group"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
       {/* Toggle Background */}
       <div className={`absolute inset-1 rounded-full transition-all duration-300 ${
         isDark 
-          ? 'bg-gradient-to-r from-blue-600 to-purple-600' 
+          ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' 
           : 'bg-gradient-to-r from-yellow-400 to-orange-500'
       }`} />
       
@@ -59,7 +59,7 @@ const ThemeToggle = () => {
           isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-180 scale-50'
         }`}>
           {/* Moon Icon */}
-          <svg className="w-3 h-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-3 h-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
           </svg>
         </div>
@@ -68,7 +68,7 @@ const ThemeToggle = () => {
       {/* Subtle glow effect */}
       <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
         isDark
-          ? 'shadow-lg shadow-blue-500/20'
+          ? 'shadow-lg shadow-yellow-500/20'
           : 'shadow-lg shadow-yellow-500/20'
       } opacity-0 group-hover:opacity-100`} />
     </button>

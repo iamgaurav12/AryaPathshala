@@ -62,29 +62,47 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
     isAvailable 
   }) => (
     <div 
-      className={`p-4 rounded-lg border transition-all duration-200 ${
+      className={`p-4 rounded-lg border transition-all duration-200 transform hover:scale-[1.02] ${
         isAvailable 
-          ? `cursor-pointer hover:shadow-md border-${color}-200 bg-${color}-50 dark:bg-${color}-900/20 hover:border-${color}-300`
-          : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+          ? darkMode 
+            ? 'cursor-pointer hover:shadow-dark border-primary bg-dark-tertiary hover:border-accent-primary hover:shadow-accent' 
+            : `cursor-pointer hover:shadow-md border-${color}-200 bg-${color}-50 hover:border-${color}-300`
+          : darkMode 
+            ? 'border-primary bg-dark-secondary'
+            : 'border-gray-200 bg-gray-50'
       }`}
       onClick={() => isAvailable && handleResourceClick(url, type)}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-lg ${
-            isAvailable ? `bg-${color}-100 dark:bg-${color}-900/40` : 'bg-gray-200 dark:bg-gray-700'
+            isAvailable 
+              ? darkMode 
+                ? 'bg-accent-primary/20 border border-accent-primary' 
+                : `bg-${color}-100`
+              : darkMode 
+                ? 'bg-dark-quaternary' 
+                : 'bg-gray-200'
           }`}>
             <Icon className={`h-5 w-5 ${
-              isAvailable ? `text-${color}-600 dark:text-${color}-400` : 'text-gray-400'
+              isAvailable 
+                ? darkMode 
+                  ? 'text-accent-primary' 
+                  : `text-${color}-600`
+                : 'text-muted'
             }`} />
           </div>
           
           <div className="flex-1">
-            <h4 className={`font-medium ${isAvailable ? '' : 'text-gray-400'}`}>
+            <h4 className={`font-medium ${
+              isAvailable 
+                ? darkMode ? 'text-primary' : '' 
+                : 'text-muted'
+            }`}>
               {title}
             </h4>
             <p className={`text-sm ${
-              darkMode ? 'text-gray-400' : 'text-gray-600'
+              darkMode ? 'text-muted' : 'text-gray-600'
             }`}>
               {isAvailable ? description : 'Not available yet'}
             </p>
@@ -93,16 +111,22 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
 
         <div className="flex items-center space-x-2">
           {loadingResource === type ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+            <div className={`animate-spin rounded-full h-4 w-4 border-2 border-t-transparent ${
+              darkMode ? 'border-accent-primary' : 'border-blue-500'
+            }`}></div>
           ) : isAvailable ? (
             <>
-              <span className={`text-xs font-medium text-${color}-600 dark:text-${color}-400`}>
+              <span className={`text-xs font-medium ${
+                darkMode ? 'text-accent-primary' : `text-${color}-600`
+              }`}>
                 Available
               </span>
-              <ExternalLink className={`h-4 w-4 text-${color}-500`} />
+              <ExternalLink className={`h-4 w-4 ${
+                darkMode ? 'text-accent-primary' : `text-${color}-500`
+              }`} />
             </>
           ) : (
-            <span className="text-xs text-gray-400">Coming Soon</span>
+            <span className="text-xs text-muted">Coming Soon</span>
           )}
         </div>
       </div>
@@ -117,20 +141,26 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
   ];
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-6`}>
+    <div className={`${darkMode ? 'bg-dark-tertiary shadow-dark-lg border border-primary' : 'bg-white shadow-lg'} rounded-lg p-6`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold">{chapter.title}</h2>
+          <h2 className={`text-2xl font-bold ${darkMode ? 'text-primary' : 'text-gray-900'}`}>
+            {chapter.title}
+          </h2>
           <div className="flex items-center space-x-4 mt-2">
             {chapter.subject && (
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+                darkMode 
+                  ? 'bg-accent-primary/20 text-accent-primary border border-accent-primary' 
+                  : 'bg-gray-200 text-gray-700'
               }`}>
                 {chapter.subject}
               </span>
             )}
-            <span className="flex items-center space-x-1 text-sm text-gray-500">
+            <span className={`flex items-center space-x-1 text-sm ${
+              darkMode ? 'text-muted' : 'text-gray-500'
+            }`}>
               <Clock className="h-4 w-4" />
               <span>Study Material</span>
             </span>
@@ -139,8 +169,10 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
         
         <button
           onClick={onClose}
-          className={`p-2 rounded-lg transition-colors ${
-            darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+          className={`p-2 rounded-lg transition-all duration-200 ${
+            darkMode 
+              ? 'hover:bg-dark-quaternary text-muted hover:text-accent-primary' 
+              : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
           }`}
         >
           <X className="h-6 w-6" />
@@ -148,16 +180,20 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
       </div>
 
       {/* Description */}
-      <div className={`p-4 rounded-lg mb-6 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-        <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+      <div className={`p-4 rounded-lg mb-6 ${
+        darkMode ? 'bg-dark-secondary border border-primary' : 'bg-gray-100'
+      }`}>
+        <p className={`${darkMode ? 'text-secondary' : 'text-gray-700'}`}>
           {chapter.description}
         </p>
       </div>
 
       {/* Resources */}
       <div className="space-y-4 mb-6">
-        <h3 className="text-lg font-semibold flex items-center space-x-2">
-          <BookOpen className="h-5 w-5" />
+        <h3 className={`text-lg font-semibold flex items-center space-x-2 ${
+          darkMode ? 'text-primary' : 'text-gray-900'
+        }`}>
+          <BookOpen className={`h-5 w-5 ${darkMode ? 'text-accent-primary' : 'text-gray-700'}`} />
           <span>Study Resources</span>
         </h3>
         
@@ -196,21 +232,25 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
 
       {/* Exam Tips (for Class 10) */}
       {showExamTips && (
-        <div className={`p-4 rounded-lg border-l-4 border-orange-500 ${
-          darkMode ? 'bg-orange-900/20' : 'bg-orange-50'
-        } mb-6`}>
+        <div className={`p-4 rounded-lg border-l-4 mb-6 ${
+          darkMode 
+            ? 'border-accent-primary bg-accent-primary/10' 
+            : 'border-orange-500 bg-orange-50'
+        }`}>
           <h4 className={`font-semibold mb-3 flex items-center space-x-2 ${
-            darkMode ? 'text-orange-200' : 'text-orange-800'
+            darkMode ? 'text-accent-primary' : 'text-orange-800'
           }`}>
             <Target className="h-5 w-5" />
             <span>Board Exam Tips</span>
           </h4>
           <ul className={`space-y-2 text-sm ${
-            darkMode ? 'text-orange-300' : 'text-orange-700'
+            darkMode ? 'text-secondary' : 'text-orange-700'
           }`}>
             {examTips.map((tip, index) => (
               <li key={index} className="flex items-start space-x-2">
-                <CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <CheckCircle className={`h-4 w-4 flex-shrink-0 mt-0.5 ${
+                  darkMode ? 'text-accent-primary' : 'text-orange-600'
+                }`} />
                 <span>{tip}</span>
               </li>
             ))}
@@ -219,47 +259,67 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
       )}
 
       {/* Study Progress */}
-      <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-        <h4 className="font-medium mb-3 flex items-center space-x-2">
-          <CheckCircle className="h-5 w-5 text-green-500" />
+      <div className={`p-4 rounded-lg ${
+        darkMode ? 'bg-dark-secondary border border-primary' : 'bg-gray-100'
+      }`}>
+        <h4 className={`font-medium mb-3 flex items-center space-x-2 ${
+          darkMode ? 'text-primary' : 'text-gray-900'
+        }`}>
+          <CheckCircle className={`h-5 w-5 ${
+            darkMode ? 'text-accent-secondary' : 'text-green-500'
+          }`} />
           <span>Study Progress</span>
         </h4>
         
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <div className={`text-lg font-bold ${
-              chapter.notesLink ? 'text-green-500' : 'text-gray-400'
+              chapter.notesLink 
+                ? darkMode ? 'text-accent-primary' : 'text-green-500'
+                : 'text-muted'
             }`}>
               {chapter.notesLink ? '✓' : '○'}
             </div>
-            <div className="text-xs text-gray-500">Notes</div>
+            <div className={`text-xs ${darkMode ? 'text-muted' : 'text-gray-500'}`}>
+              Notes
+            </div>
           </div>
           
           <div>
             <div className={`text-lg font-bold ${
-              chapter.dppLink ? 'text-blue-500' : 'text-gray-400'
+              chapter.dppLink 
+                ? darkMode ? 'text-accent-primary' : 'text-blue-500'
+                : 'text-muted'
             }`}>
               {chapter.dppLink ? '✓' : '○'}
             </div>
-            <div className="text-xs text-gray-500">Practice</div>
+            <div className={`text-xs ${darkMode ? 'text-muted' : 'text-gray-500'}`}>
+              Practice
+            </div>
           </div>
           
           <div>
             <div className={`text-lg font-bold ${
-              chapter.lectureLink ? 'text-red-500' : 'text-gray-400'
+              chapter.lectureLink 
+                ? darkMode ? 'text-accent-primary' : 'text-red-500'
+                : 'text-muted'
             }`}>
               {chapter.lectureLink ? '✓' : '○'}
             </div>
-            <div className="text-xs text-gray-500">Video</div>
+            <div className={`text-xs ${darkMode ? 'text-muted' : 'text-gray-500'}`}>
+              Video
+            </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
       <div className={`mt-6 pt-4 border-t ${
-        darkMode ? 'border-gray-700' : 'border-gray-200'
+        darkMode ? 'border-primary' : 'border-gray-200'
       }`}>
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className={`flex items-center justify-between text-sm ${
+          darkMode ? 'text-muted' : 'text-gray-500'
+        }`}>
           <div className="flex items-center space-x-1">
             <AlertCircle className="h-4 w-4" />
             <span>Click on available resources to open them</span>

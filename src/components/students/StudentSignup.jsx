@@ -59,20 +59,20 @@ const StudentSignup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
       {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-4 -top-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute -right-4 -top-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-cyan-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute -left-4 -top-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-color-dodge filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -right-4 -top-4 w-72 h-72 bg-yellow-600 rounded-full mix-blend-color-dodge filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-400 rounded-full mix-blend-color-dodge filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative max-w-md w-full rounded-2xl p-8 space-y-8 bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-[0_0_15px_rgba(49,120,198,0.2)] hover:shadow-[0_0_20px_rgba(49,120,198,0.3)] transition-all duration-300">
+      <div className="relative max-w-md w-full rounded-2xl p-8 space-y-8 bg-gray-900/90 backdrop-blur-xl border border-gray-800 shadow-[0_0_15px_rgba(255,193,7,0.2)] hover:shadow-[0_0_20px_rgba(255,193,7,0.3)] transition-all duration-300">
         <div>
-          <h2 className="text-center text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+          <h2 className="text-center text-3xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 bg-clip-text text-transparent">
             Join Arya Pathshala
           </h2>
-          <p className="mt-2 text-center text-sm text-blue-300/80">
+          <p className="mt-2 text-center text-sm text-yellow-200/80">
             Create your account to start learning
           </p>
         </div>
@@ -92,7 +92,7 @@ const StudentSignup = () => {
                 name="name"
                 type="text"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 shadow-[inset_0_1px_2px_rgba(49,120,198,0.15)] hover:shadow-[inset_0_1px_2px_rgba(49,120,198,0.25)] backdrop-blur-xl transition-all duration-200 text-sm"
+                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
                 placeholder="Full Name"
                 value={formData.name}
                 onChange={handleChange}
@@ -106,7 +106,7 @@ const StudentSignup = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 shadow-[inset_0_1px_2px_rgba(49,120,198,0.15)] hover:shadow-[inset_0_1px_2px_rgba(49,120,198,0.25)] backdrop-blur-xl transition-all duration-200 text-sm"
+                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleChange}
@@ -118,13 +118,13 @@ const StudentSignup = () => {
                 id="class"
                 name="class"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 shadow-[inset_0_1px_2px_rgba(49,120,198,0.15)] hover:shadow-[inset_0_1px_2px_rgba(49,120,198,0.25)] backdrop-blur-xl transition-all duration-200 text-sm"
+                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
                 value={formData.class}
                 onChange={handleChange}
               >
-                <option value="" className="bg-gray-900 text-blue-100">Select Class</option>
-                <option value="9" className="bg-gray-900 text-blue-100">Class 9</option>
-                <option value="10" className="bg-gray-900 text-blue-100">Class 10</option>
+                <option value="" className="bg-black text-gray-400">Select Class</option>
+                <option value="9" className="bg-black text-white">Class 9</option>
+                <option value="10" className="bg-black text-white">Class 10</option>
               </select>
             </div>
             <div>
@@ -135,7 +135,7 @@ const StudentSignup = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 shadow-[inset_0_1px_2px_rgba(49,120,198,0.15)] hover:shadow-[inset_0_1px_2px_rgba(49,120,198,0.25)] backdrop-blur-xl transition-all duration-200 text-sm"
+                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
@@ -149,7 +149,7 @@ const StudentSignup = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="appearance-none relative block w-full px-4 py-3 bg-gray-900/50 text-blue-100 placeholder-blue-300/50 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 shadow-[inset_0_1px_2px_rgba(49,120,198,0.15)] hover:shadow-[inset_0_1px_2px_rgba(49,120,198,0.25)] backdrop-blur-xl transition-all duration-200 text-sm"
+                className="appearance-none relative block w-full px-4 py-3 bg-black/50 text-white placeholder-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 shadow-[inset_0_1px_2px_rgba(255,193,7,0.15)] hover:shadow-[inset_0_1px_2px_rgba(255,193,7,0.25)] backdrop-blur-xl transition-all duration-200 text-sm hover:border-gray-700"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -161,11 +161,11 @@ const StudentSignup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-blue-100 bg-gradient-to-r from-blue-600/80 to-blue-800/80 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500/70 shadow-[0_0_15px_rgba(49,120,198,0.3)] hover:shadow-[0_0_20px_rgba(49,120,198,0.4)] backdrop-blur-xl transition-all duration-200 disabled:opacity-50 mt-6"
+              className="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-black bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500/70 shadow-[0_0_15px_rgba(255,193,7,0.3)] hover:shadow-[0_0_20px_rgba(255,193,7,0.4)] backdrop-blur-xl transition-all duration-200 disabled:opacity-50 mt-6"
             >
               {loading ? (
                 <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>

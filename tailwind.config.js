@@ -8,6 +8,17 @@ export default {
   theme: {
     extend: {
       colors: {
+        dark: {
+          primary: '#000000',
+          secondary: '#111111',
+          tertiary: '#1a1a1a'
+        },
+        yellow: {
+          primary: '#FFD700',
+          secondary: '#FFA500',
+          tertiary: '#FF8C00',
+          hover: '#FFE55C'
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

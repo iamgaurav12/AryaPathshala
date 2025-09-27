@@ -22,10 +22,6 @@ import StudentLogin from './components/students/StudentLogin';
 import StudentSignup from './components/students/StudentSignup';
 import StudentProtectedRoute from './components/students/StudentProtectedRoute';
 
-// Pages
-
-// Admin Route Protection
-
 // Import Firebase configuration to initialize
 import './firebase/config';
 

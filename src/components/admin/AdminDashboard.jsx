@@ -42,36 +42,34 @@ const ChapterItem = memo(({
 
   return (
     <div
-      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+      className={`p-3 rounded-lg border cursor-pointer transition-all duration-300 ${
         selected
-          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-          : darkMode
-          ? 'border-gray-600 hover:border-gray-500 hover:bg-gray-700'
-          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+          ? 'border-yellow-400 bg-yellow-500/10 shadow-lg shadow-yellow-400/20'
+          : 'border-gray-800 hover:border-yellow-400/50 hover:bg-gray-900/80 bg-black/40'
       }`}
       onClick={handleClick}
     >
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium truncate">{chapter.title}</h3>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>
+          <h3 className={`font-medium truncate ${
+            selected ? 'text-yellow-300' : 'text-white'
+          }`}>
+            {chapter.title}
+          </h3>
+          <p className="text-sm text-gray-400 truncate">
             {chapter.subject || 'General'}
           </p>
         </div>
         <div className="flex items-center space-x-1 ml-2">
           <button
             onClick={handleEdit}
-            className={`p-1 rounded ${
-              darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
-            }`}
+            className="p-1 rounded hover:bg-gray-800 text-yellow-400 hover:text-yellow-300 transition-colors"
           >
             <Edit3 className="h-4 w-4" />
           </button>
           <button
             onClick={handleDelete}
-            className={`p-1 rounded ${
-              darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
-            } text-red-500`}
+            className="p-1 rounded hover:bg-gray-800 text-red-400 hover:text-red-300 transition-colors"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -153,22 +151,18 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className={`sticky top-16 z-40 ${
-        darkMode 
-          ? 'bg-gray-900/95 backdrop-blur border-gray-700' 
-          : 'bg-white/95 backdrop-blur border-gray-200'
-        } border-b shadow-sm`}>
+      <div className="sticky top-16 z-40 bg-black/95 backdrop-blur border-b border-gray-800 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-                <BookOpen className="h-5 w-5 text-white" />
+              <div className="p-2 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg shadow-lg">
+                <BookOpen className="h-5 w-5 text-black" />
               </div>
-              <h1 className={`text-xl font-bold ${
-                darkMode ? 'text-white' : 'text-gray-900'
-              }`}>Content Management</h1>
+              <h1 className="text-xl font-bold text-white">
+                Content Management
+              </h1>
             </div>
             
             {/* Class Selector */}
@@ -177,12 +171,10 @@ const AdminDashboard = () => {
                 <button
                   key={className}
                   onClick={() => handleClassChange(className)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     selectedClass === className
-                      ? 'bg-blue-500 text-white'
-                      : darkMode
-                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                      ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-400/30 hover:bg-yellow-400'
+                      : 'bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-yellow-400 border border-gray-700'
                   }`}
                 >
                   {className === 'class9' ? 'Class 9' : 'Class 10'}
@@ -195,10 +187,10 @@ const AdminDashboard = () => {
 
       {/* Notification */}
       {notification.show && (
-        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-xl border ${
           notification.type === 'error' 
-            ? 'bg-red-500 text-white' 
-            : 'bg-green-500 text-white'
+            ? 'bg-red-900 border-red-700 text-red-100' 
+            : 'bg-green-900 border-green-700 text-green-100'
         }`}>
           <div className="flex items-center space-x-2">
             {notification.type === 'error' ? (
@@ -214,22 +206,16 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Panel - Chapter List */}
-          <div className={`lg:col-span-1 ${
-            darkMode 
-              ? 'bg-gray-800/50 backdrop-blur border-gray-700' 
-              : 'bg-white/50 backdrop-blur border-gray-200'
-            } rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 p-6`}>
+          <div className="lg:col-span-1 bg-gray-900/70 backdrop-blur border border-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className={`text-xl font-bold ${
-                darkMode ? 'text-white' : 'text-gray-900'
-              }`}>Chapters</h2>
+              <h2 className="text-xl font-bold text-white">Chapters</h2>
               <button
                 onClick={() => {
                   setShowAddForm(true);
                   setSelectedChapter(null);
                   setIsEditing(false);
                 }}
-                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow"
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-500 transition-all duration-300 font-medium shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add</span>
@@ -238,14 +224,14 @@ const AdminDashboard = () => {
 
             {loading ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
               </div>
             ) : error ? (
-              <div className="text-red-500 text-center py-8">
+              <div className="text-red-400 text-center py-8 bg-red-900/20 rounded-lg border border-red-800">
                 Error: {error}
               </div>
             ) : (
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-700">
                 {chapters.map((chapter) => (
                   <ChapterItem
                     key={chapter.id}
@@ -263,7 +249,7 @@ const AdminDashboard = () => {
                 ))}
                 
                 {chapters.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-400 bg-gray-900/50 rounded-lg border border-gray-800">
                     No chapters found. Click "Add" to create the first chapter.
                   </div>
                 )}
@@ -272,11 +258,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Right Panel - Chapter Details/Editor */}
-          <div className={`lg:col-span-2 ${
-            darkMode 
-              ? 'bg-gray-800/50 backdrop-blur border-gray-700' 
-              : 'bg-white/50 backdrop-blur border-gray-200'
-            } rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 p-6`}>
+          <div className="lg:col-span-2 bg-gray-900/70 backdrop-blur border border-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6">
             {showAddForm ? (
               <ChapterManager
                 onSave={handleAddChapter}
@@ -297,11 +279,11 @@ const AdminDashboard = () => {
               />
             ) : (
               <div className="text-center py-12">
-                <BookOpen className={`h-16 w-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`} />
-                <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <BookOpen className="h-16 w-16 mx-auto mb-4 text-gray-600" />
+                <h3 className="text-lg font-medium mb-2 text-gray-400">
                   Select a chapter or add a new one
                 </h3>
-                <p className={`${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                <p className="text-gray-500">
                   Choose a chapter from the list to view and edit its details.
                 </p>
               </div>

@@ -57,18 +57,18 @@ const ChapterList = ({
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[...Array(6)].map((_, index) => (
-        <div key={index} className="animate-pulse bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+        <div key={index} className="animate-pulse bg-dark-secondary rounded-2xl p-6 shadow-dark border border-primary">
           <div className="flex items-center justify-between mb-4">
-            <div className="h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-            <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+            <div className="h-6 w-20 bg-dark-tertiary rounded-full"></div>
+            <div className="h-6 w-16 bg-dark-tertiary rounded-full"></div>
           </div>
-          <div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-3"></div>
-          <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-          <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+          <div className="h-6 w-3/4 bg-dark-tertiary rounded mb-3"></div>
+          <div className="h-4 w-full bg-dark-tertiary rounded mb-2"></div>
+          <div className="h-4 w-2/3 bg-dark-tertiary rounded mb-4"></div>
           <div className="grid grid-cols-3 gap-2">
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div className="h-12 bg-dark-tertiary rounded"></div>
+            <div className="h-12 bg-dark-tertiary rounded"></div>
+            <div className="h-12 bg-dark-tertiary rounded"></div>
           </div>
         </div>
       ))}
@@ -86,23 +86,23 @@ const ChapterList = ({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Search and Filter Bar */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-dark-secondary rounded-2xl shadow-dark border border-primary p-6">
         {/* Search Bar */}
         <div className="relative mb-6">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <span className="text-gray-400 text-xl">🔍</span>
+            <span className="text-yellow-muted text-xl">🔍</span>
           </div>
           <input
             type="text"
             placeholder="Search chapters, topics, or keywords..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full pl-12 pr-4 py-3 bg-dark-quaternary border border-secondary rounded-xl focus:ring-2 focus:ring-yellow-primary focus:border-yellow-primary transition-all duration-300 text-primary placeholder:text-quaternary"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-quaternary hover:text-yellow-primary transition-colors duration-200"
             >
               ✕
             </button>
@@ -113,16 +113,16 @@ const ChapterList = ({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           {/* Subject Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-secondary mb-2">
               📚 Subject
             </label>
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white text-sm"
+              className="w-full px-3 py-2 bg-dark-quaternary border border-secondary rounded-lg focus:ring-2 focus:ring-yellow-primary focus:border-yellow-primary text-primary text-sm"
             >
               {subjects.map(subject => (
-                <option key={subject} value={subject}>
+                <option key={subject} value={subject} className="bg-dark-quaternary text-primary">
                   {subject === 'all' ? 'All Subjects' : subject}
                 </option>
               ))}
@@ -131,16 +131,16 @@ const ChapterList = ({
 
           {/* Difficulty Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-secondary mb-2">
               📈 Difficulty
             </label>
             <select
               value={selectedDifficulty}
               onChange={(e) => setSelectedDifficulty(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white text-sm"
+              className="w-full px-3 py-2 bg-dark-quaternary border border-secondary rounded-lg focus:ring-2 focus:ring-yellow-primary focus:border-yellow-primary text-primary text-sm"
             >
               {difficulties.map(difficulty => (
-                <option key={difficulty} value={difficulty}>
+                <option key={difficulty} value={difficulty} className="bg-dark-quaternary text-primary">
                   {difficulty === 'all' ? 'All Levels' : difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
                 </option>
               ))}
@@ -149,33 +149,33 @@ const ChapterList = ({
 
           {/* Sort By */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-secondary mb-2">
               🔄 Sort By
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white text-sm"
+              className="w-full px-3 py-2 bg-dark-quaternary border border-secondary rounded-lg focus:ring-2 focus:ring-yellow-primary focus:border-yellow-primary text-primary text-sm"
             >
-              <option value="order">Chapter Order</option>
-              <option value="difficulty">Difficulty</option>
-              <option value="progress">Progress</option>
-              <option value="alphabetical">Alphabetical</option>
+              <option value="order" className="bg-dark-quaternary text-primary">Chapter Order</option>
+              <option value="difficulty" className="bg-dark-quaternary text-primary">Difficulty</option>
+              <option value="progress" className="bg-dark-quaternary text-primary">Progress</option>
+              <option value="alphabetical" className="bg-dark-quaternary text-primary">Alphabetical</option>
             </select>
           </div>
 
           {/* View Mode */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-secondary mb-2">
               👁️ View
             </label>
-            <div className="flex rounded-lg bg-gray-50 dark:bg-gray-700 p-1">
+            <div className="flex rounded-lg bg-dark-quaternary p-1 border border-secondary">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex-1 px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
                   viewMode === 'grid'
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-yellow-primary text-dark-primary shadow-md'
+                    : 'text-tertiary hover:text-primary hover:bg-dark-tertiary'
                 }`}
               >
                 ⊞ Grid
@@ -184,8 +184,8 @@ const ChapterList = ({
                 onClick={() => setViewMode('list')}
                 className={`flex-1 px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
                   viewMode === 'list'
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-yellow-primary text-dark-primary shadow-md'
+                    : 'text-tertiary hover:text-primary hover:bg-dark-tertiary'
                 }`}
               >
                 ☰ List
@@ -196,33 +196,33 @@ const ChapterList = ({
 
         {/* Filter Summary */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-sm text-tertiary">
             Showing {filteredAndSortedChapters.length} of {chapters.length} chapters
           </span>
           
           {/* Active Filters */}
           {searchTerm && (
-            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
+            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-yellow-primary/20 text-yellow-primary rounded-full text-xs font-medium border border-yellow-muted">
               <span>🔍 "{searchTerm}"</span>
-              <button onClick={() => setSearchTerm('')} className="ml-1 hover:text-blue-900 dark:hover:text-blue-100">
+              <button onClick={() => setSearchTerm('')} className="ml-1 hover:text-yellow-secondary">
                 ✕
               </button>
             </span>
           )}
           
           {selectedSubject !== 'all' && (
-            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium">
+            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-green-400/20 text-green-400 rounded-full text-xs font-medium border border-green-400/30">
               <span>📚 {selectedSubject}</span>
-              <button onClick={() => setSelectedSubject('all')} className="ml-1 hover:text-green-900 dark:hover:text-green-100">
+              <button onClick={() => setSelectedSubject('all')} className="ml-1 hover:text-green-300">
                 ✕
               </button>
             </span>
           )}
           
           {selectedDifficulty !== 'all' && (
-            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium">
+            <span className="inline-flex items-center space-x-1 px-3 py-1 bg-purple-400/20 text-purple-400 rounded-full text-xs font-medium border border-purple-400/30">
               <span>📈 {selectedDifficulty}</span>
-              <button onClick={() => setSelectedDifficulty('all')} className="ml-1 hover:text-purple-900 dark:hover:text-purple-100">
+              <button onClick={() => setSelectedDifficulty('all')} className="ml-1 hover:text-purple-300">
                 ✕
               </button>
             </span>
@@ -236,7 +236,7 @@ const ChapterList = ({
                 setSelectedSubject('all');
                 setSelectedDifficulty('all');
               }}
-              className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline"
+              className="text-xs text-quaternary hover:text-yellow-primary underline transition-colors duration-200"
             >
               Clear all filters
             </button>
@@ -246,12 +246,12 @@ const ChapterList = ({
 
       {/* Chapter Grid/List */}
       {filteredAndSortedChapters.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-16 bg-dark-secondary rounded-2xl shadow-dark border border-primary">
           <div className="text-6xl mb-4">📚</div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-primary mb-2">
             No chapters found
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-tertiary mb-6">
             Try adjusting your search criteria or filters to find more chapters.
           </p>
           <button
@@ -260,7 +260,7 @@ const ChapterList = ({
               setSelectedSubject('all');
               setSelectedDifficulty('all');
             }}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+            className="px-6 py-3 bg-gradient-to-r from-yellow-primary to-yellow-secondary text-dark-primary rounded-xl font-semibold hover:shadow-yellow transform hover:-translate-y-1 transition-all duration-300"
           >
             Show All Chapters
           </button>
@@ -292,36 +292,37 @@ const ChapterList = ({
 
       {/* Quick Stats */}
       {filteredAndSortedChapters.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            📊 Quick Stats
+        <div className="bg-gradient-to-r from-dark-tertiary to-dark-quaternary rounded-2xl p-6 border border-yellow-muted shadow-dark">
+          <h3 className="text-lg font-semibold text-primary mb-4 flex items-center">
+            <span className="mr-2">📊</span>
+            Quick Stats
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-center bg-dark-secondary rounded-lg p-4 border border-primary hover:border-green-400 transition-colors duration-200">
+              <div className="text-2xl font-bold text-green-400">
                 {filteredAndSortedChapters.filter(ch => ch.progress >= 100).length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
+              <div className="text-sm text-tertiary">Completed</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+            <div className="text-center bg-dark-secondary rounded-lg p-4 border border-primary hover:border-yellow-primary transition-colors duration-200">
+              <div className="text-2xl font-bold text-yellow-primary">
                 {filteredAndSortedChapters.filter(ch => ch.progress > 0 && ch.progress < 100).length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
+              <div className="text-sm text-tertiary">In Progress</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
+            <div className="text-center bg-dark-secondary rounded-lg p-4 border border-primary hover:border-quaternary transition-colors duration-200">
+              <div className="text-2xl font-bold text-quaternary">
                 {filteredAndSortedChapters.filter(ch => !ch.progress || ch.progress === 0).length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Not Started</div>
+              <div className="text-sm text-tertiary">Not Started</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+            <div className="text-center bg-dark-secondary rounded-lg p-4 border border-primary hover:border-purple-400 transition-colors duration-200">
+              <div className="text-2xl font-bold text-purple-400">
                 {Math.round(
                   filteredAndSortedChapters.reduce((acc, ch) => acc + (ch.progress || 0), 0) / filteredAndSortedChapters.length
                 )}%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Avg Progress</div>
+              <div className="text-sm text-tertiary">Avg Progress</div>
             </div>
           </div>
         </div>

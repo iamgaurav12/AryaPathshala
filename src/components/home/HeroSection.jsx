@@ -13,11 +13,11 @@ const HeroSection = () => {
   ];
 
   const subjects = [
-    { name: "Mathematics", icon: "🔢", color: "from-blue-500 to-cyan-500" },
-    { name: "Science", icon: "🧪", color: "from-green-500 to-emerald-500" },
-    { name: "English", icon: "📚", color: "from-purple-500 to-pink-500" },
-    { name: "Hindi", icon: "📖", color: "from-orange-500 to-red-500" },
-    { name: "Social Science", icon: "🌍", color: "from-indigo-500 to-purple-500" }
+    { name: "Mathematics", icon: "🔢", color: "from-yellow-500 to-yellow-600" },
+    { name: "Science", icon: "🧪", color: "from-yellow-500 to-yellow-600" },
+    { name: "English", icon: "📚", color: "from-yellow-500 to-yellow-600" },
+    { name: "Hindi", icon: "📖", color: "from-yellow-500 to-yellow-600" },
+    { name: "Social Science", icon: "🌍", color: "from-yellow-500 to-yellow-600" }
   ];
 
   const features = [
@@ -43,18 +43,18 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 overflow-hidden">
+    <section className="relative min-h-screen bg-black overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        {/* Floating geometric shapes */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-20 animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
-        <div className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-pink-400 to-red-400 rotate-45 opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-32 left-20 w-24 h-24 bg-gradient-to-r from-green-400 to-blue-400 rounded-lg opacity-20 animate-spin" style={{ animationDuration: '8s' }}></div>
-        <div className="absolute bottom-20 right-32 w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full opacity-30 animate-bounce" style={{ animationDelay: '2s', animationDuration: '2s' }}></div>
+        {/* Floating geometric shapes with yellow accents */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full opacity-10 animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-yellow-400 to-yellow-600 rotate-45 opacity-15 animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-32 left-20 w-24 h-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg opacity-10 animate-spin" style={{ animationDuration: '8s' }}></div>
+        <div className="absolute bottom-20 right-32 w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full opacity-20 animate-bounce" style={{ animationDelay: '2s', animationDuration: '2s' }}></div>
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-purple-500/10"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50 dark:to-gray-900/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/5 to-yellow-600/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900/30"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
@@ -64,16 +64,16 @@ const HeroSection = () => {
             {/* Main Heading with Animation */}
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
                   Welcome to
                 </span>
                 <br />
-                <span className="text-gray-900 dark:text-white">AryaPathshala</span>
+                <span className="text-white">AryaPathshala</span>
               </h1>
               
               {/* Rotating text */}
               <div className="h-16 flex items-center justify-center lg:justify-start">
-                <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-300 transition-all duration-500 transform">
+                <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 transition-all duration-500 transform relative">
                   {heroTexts.map((text, index) => (
                     <span
                       key={index}
@@ -91,9 +91,9 @@ const HeroSection = () => {
             </div>
 
             {/* Description */}
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               Transform your academic journey with our comprehensive learning platform designed specifically for 
-              <span className="font-semibold text-blue-600 dark:text-blue-400"> Class 9th & 10th students</span>. 
+              <span className="font-semibold text-yellow-400"> Class 9th & 10th students</span>. 
               Get access to premium video lectures, detailed notes, and practice papers.
             </p>
 
@@ -101,13 +101,13 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
                 onClick={() => scrollToSection('courses')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:scale-105"
+                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-xl font-semibold text-lg shadow-lg shadow-yellow-400/30 hover:shadow-xl hover:shadow-yellow-400/50 transform hover:-translate-y-1 transition-all duration-300 hover:scale-105 hover:from-yellow-400 hover:to-yellow-500"
               >
                 Start Learning 🚀
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 transform hover:-translate-y-1 transition-all duration-300"
+                className="px-8 py-4 border-2 border-gray-700 text-gray-300 rounded-xl font-semibold text-lg hover:bg-gray-900 hover:border-yellow-400/50 hover:text-yellow-400 transform hover:-translate-y-1 transition-all duration-300"
               >
                 Learn More 📚
               </button>
@@ -118,15 +118,15 @@ const HeroSection = () => {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="text-center p-4 rounded-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 transform hover:-translate-y-2 transition-all duration-300 group"
+                  className="text-center p-4 rounded-xl bg-gray-900/70 backdrop-blur-sm border border-gray-800 hover:bg-gray-900 hover:border-yellow-400/30 transform hover:-translate-y-2 transition-all duration-300 group"
                 >
                   <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
+                  <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-yellow-300 transition-colors duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <p className="text-xs text-gray-400">
                     {feature.desc}
                   </p>
                 </div>
@@ -137,10 +137,10 @@ const HeroSection = () => {
           {/* Right Content - Interactive Subjects */}
           <div className="relative">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 Choose Your Subject
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-400">
                 Interactive learning across all major subjects
               </p>
             </div>
@@ -149,7 +149,7 @@ const HeroSection = () => {
               {subjects.map((subject, index) => (
                 <div
                   key={index}
-                  className="group relative p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700"
+                  className="group relative p-6 bg-gray-900/70 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-yellow-400/20 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer border border-gray-800 hover:border-yellow-400/50"
                   style={{
                     animationDelay: `${index * 0.1}s`
                   }}
@@ -162,20 +162,20 @@ const HeroSection = () => {
                     <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
                       {subject.icon}
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+                    <h4 className="text-lg font-semibold text-white group-hover:text-yellow-300 transition-all duration-300">
                       {subject.name}
                     </h4>
                     
                     {/* Interactive elements */}
                     <div className="mt-4 space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                       <div className="flex justify-center space-x-2">
-                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs">
+                        <span className="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs border border-yellow-400/30">
                           Videos
                         </span>
-                        <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded text-xs">
+                        <span className="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs border border-yellow-400/30">
                           Notes
                         </span>
-                        <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded text-xs">
+                        <span className="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs border border-yellow-400/30">
                           Tests
                         </span>
                       </div>
@@ -207,10 +207,10 @@ const HeroSection = () => {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-gray-400 dark:border-gray-600 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-400 dark:bg-gray-600 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-yellow-400 rounded-full mt-2 animate-pulse"></div>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">Scroll</p>
+          <p className="text-xs text-gray-400 mt-2 text-center">Scroll</p>
         </div>
       </div>
     </section>

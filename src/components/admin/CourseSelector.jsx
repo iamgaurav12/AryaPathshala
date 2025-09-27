@@ -11,9 +11,10 @@ const CourseSelector = ({ onSelectClass }) => {
       title: 'Class 9',
       description: 'Foundation level courses for Class 9 students',
       chapters: courses.class9?.length || 0,
-      color: 'blue',
-      gradient: 'from-blue-500 to-blue-600',
-      bgGradient: 'from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20',
+      color: 'yellow',
+      gradient: 'from-yellow-500 to-yellow-600',
+      bgGradient: 'from-gray-900 to-black',
+      borderGradient: 'from-yellow-500/20 to-yellow-600/20',
       stats: {
         notes: courses.class9?.filter(ch => ch.resources?.notes).length || 0,
         lectures: courses.class9?.filter(ch => ch.resources?.lecture).length || 0,
@@ -25,9 +26,10 @@ const CourseSelector = ({ onSelectClass }) => {
       title: 'Class 10',
       description: 'Advanced level courses for Class 10 students',
       chapters: courses.class10?.length || 0,
-      color: 'green',
-      gradient: 'from-green-500 to-green-600',
-      bgGradient: 'from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20',
+      color: 'yellow',
+      gradient: 'from-yellow-500 to-yellow-600',
+      bgGradient: 'from-gray-900 to-black',
+      borderGradient: 'from-yellow-500/20 to-yellow-600/20',
       stats: {
         notes: courses.class10?.filter(ch => ch.resources?.notes).length || 0,
         lectures: courses.class10?.filter(ch => ch.resources?.lecture).length || 0,
@@ -37,12 +39,12 @@ const CourseSelector = ({ onSelectClass }) => {
   ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-black min-h-screen">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-2xl font-bold text-white mb-2">
           Select a Class to Manage
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-400">
           Choose which class you want to edit chapters and resources for.
         </p>
       </div>
@@ -51,91 +53,97 @@ const CourseSelector = ({ onSelectClass }) => {
         {courseData.map((course) => (
           <div
             key={course.id}
-            className={`bg-gradient-to-br ${course.bgGradient} border border-gray-200 dark:border-gray-600 rounded-2xl p-8 transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer group`}
+            className={`bg-gradient-to-br ${course.bgGradient} border border-gray-800 hover:border-yellow-400/50 rounded-2xl p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-400/10 hover:scale-105 cursor-pointer group relative overflow-hidden`}
             onClick={() => onSelectClass('chapters', course.id)}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <div className={`p-4 bg-gradient-to-r ${course.gradient} rounded-xl text-white group-hover:scale-110 transition-transform duration-200`}>
-                  <BookOpen className="h-8 w-8" />
+            {/* Subtle background glow */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${course.borderGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`} />
+            
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                  <div className={`p-4 bg-gradient-to-r ${course.gradient} rounded-xl text-black group-hover:scale-110 transition-transform duration-200 shadow-lg shadow-yellow-400/30`}>
+                    <BookOpen className="h-8 w-8" />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-yellow-300 transition-colors duration-200">
+                      {course.title}
+                    </h3>
+                    <p className="text-gray-400">
+                      {course.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {course.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {course.description}
+                <ArrowRight className="h-6 w-6 text-gray-600 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-200" />
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gray-900/70 backdrop-blur rounded-xl p-4 text-center border border-gray-800 group-hover:border-yellow-400/30 transition-colors duration-200">
+                  <div className="flex items-center justify-center mb-2">
+                    <Users className="h-5 w-5 text-yellow-400" />
+                  </div>
+                  <p className="text-2xl font-bold text-white">
+                    {course.chapters}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Chapters
+                  </p>
+                </div>
+                
+                <div className="bg-gray-900/70 backdrop-blur rounded-xl p-4 text-center border border-gray-800 group-hover:border-yellow-400/30 transition-colors duration-200">
+                  <div className="flex items-center justify-center mb-2">
+                    <FileText className="h-5 w-5 text-yellow-400" />
+                  </div>
+                  <p className="text-2xl font-bold text-white">
+                    {course.stats.notes + course.stats.dpps}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Resources
                   </p>
                 </div>
               </div>
-              <ArrowRight className="h-6 w-6 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:translate-x-2 transition-all duration-200" />
-            </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white dark:bg-gray-800/50 rounded-xl p-4 text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              {/* Detailed Stats */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="flex items-center text-gray-400">
+                    <FileText className="h-4 w-4 mr-2 text-yellow-400" />
+                    Notes Available
+                  </span>
+                  <span className="font-medium text-white">
+                    {course.stats.notes}
+                  </span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {course.chapters}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Chapters
-                </p>
-              </div>
-              
-              <div className="bg-white dark:bg-gray-800/50 rounded-xl p-4 text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <FileText className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                
+                <div className="flex justify-between items-center text-sm">
+                  <span className="flex items-center text-gray-400">
+                    <Video className="h-4 w-4 mr-2 text-yellow-400" />
+                    Lectures Available
+                  </span>
+                  <span className="font-medium text-white">
+                    {course.stats.lectures}
+                  </span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {course.stats.notes + course.stats.dpps}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Resources
-                </p>
+                
+                <div className="flex justify-between items-center text-sm">
+                  <span className="flex items-center text-gray-400">
+                    <BookOpen className="h-4 w-4 mr-2 text-yellow-400" />
+                    DPPs Available
+                  </span>
+                  <span className="font-medium text-white">
+                    {course.stats.dpps}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            {/* Detailed Stats */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="flex items-center text-gray-600 dark:text-gray-400">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Notes Available
-                </span>
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {course.stats.notes}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center text-sm">
-                <span className="flex items-center text-gray-600 dark:text-gray-400">
-                  <Video className="h-4 w-4 mr-2" />
-                  Lectures Available
-                </span>
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {course.stats.lectures}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center text-sm">
-                <span className="flex items-center text-gray-600 dark:text-gray-400">
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  DPPs Available
-                </span>
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {course.stats.dpps}
-                </span>
-              </div>
-            </div>
-
-            {/* Action Button */}
-            <div className="mt-6">
-              <div className={`w-full bg-gradient-to-r ${course.gradient} text-white py-3 px-6 rounded-xl font-medium text-center group-hover:shadow-lg transition-all duration-200`}>
-                Manage {course.title}
+              {/* Action Button */}
+              <div className="mt-6">
+                <div className={`w-full bg-gradient-to-r ${course.gradient} text-black py-3 px-6 rounded-xl font-medium text-center group-hover:shadow-xl group-hover:shadow-yellow-400/40 transition-all duration-200 hover:from-yellow-400 hover:to-yellow-500`}>
+                  Manage {course.title}
+                </div>
               </div>
             </div>
           </div>
@@ -143,34 +151,34 @@ const CourseSelector = ({ onSelectClass }) => {
       </div>
 
       {/* Quick Stats Summary */}
-      <div className="mt-12 bg-gray-50 dark:bg-gray-700 rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="mt-12 bg-gray-900/70 backdrop-blur rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-lg font-semibold text-white mb-4">
           Overall Statistics
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-center bg-black/40 rounded-lg p-4 border border-gray-800">
+            <p className="text-2xl font-bold text-yellow-400">
               {(courses.class9?.length || 0) + (courses.class10?.length || 0)}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Chapters</p>
+            <p className="text-sm text-gray-400">Total Chapters</p>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+          <div className="text-center bg-black/40 rounded-lg p-4 border border-gray-800">
+            <p className="text-2xl font-bold text-yellow-400">
               {courseData.reduce((total, course) => total + course.stats.notes, 0)}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Notes</p>
+            <p className="text-sm text-gray-400">Total Notes</p>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+          <div className="text-center bg-black/40 rounded-lg p-4 border border-gray-800">
+            <p className="text-2xl font-bold text-yellow-400">
               {courseData.reduce((total, course) => total + course.stats.lectures, 0)}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Lectures</p>
+            <p className="text-sm text-gray-400">Total Lectures</p>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+          <div className="text-center bg-black/40 rounded-lg p-4 border border-gray-800">
+            <p className="text-2xl font-bold text-yellow-400">
               {courseData.reduce((total, course) => total + course.stats.dpps, 0)}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total DPPs</p>
+            <p className="text-sm text-gray-400">Total DPPs</p>
           </div>
         </div>
       </div>

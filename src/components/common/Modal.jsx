@@ -75,7 +75,7 @@ const Modal = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
         onClick={handleOverlayClick}
       />
       
@@ -84,19 +84,19 @@ const Modal = ({
         <div
           ref={modalRef}
           tabIndex={-1}
-          className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full ${sizeClasses[size]} transform transition-all duration-300 scale-100 opacity-100 ${className}`}
+          className={`relative bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-zinc-800 w-full ${sizeClasses[size]} transform transition-all duration-300 scale-100 opacity-100 ${className}`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-zinc-800">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-yellow-400">
                 {title}
               </h2>
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-all duration-200"
                   aria-label="Close modal"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,9 +130,9 @@ export const ConfirmModal = ({
 }) => {
   const typeStyles = {
     default: {
-      confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white',
+      confirmButton: 'bg-yellow-500 hover:bg-yellow-600 text-black',
       icon: '❓',
-      iconBg: 'bg-blue-100 dark:bg-blue-900/20 text-blue-600'
+      iconBg: 'bg-yellow-500/20 dark:bg-yellow-500/20 text-yellow-500'
     },
     danger: {
       confirmButton: 'bg-red-600 hover:bg-red-700 text-white',
@@ -140,9 +140,9 @@ export const ConfirmModal = ({
       iconBg: 'bg-red-100 dark:bg-red-900/20 text-red-600'
     },
     success: {
-      confirmButton: 'bg-green-600 hover:bg-green-700 text-white',
+      confirmButton: 'bg-yellow-500 hover:bg-yellow-600 text-black',
       icon: '✅',
-      iconBg: 'bg-green-100 dark:bg-green-900/20 text-green-600'
+      iconBg: 'bg-yellow-500/20 dark:bg-yellow-500/20 text-yellow-500'
     }
   };
 
@@ -162,7 +162,7 @@ export const ConfirmModal = ({
         <div className="flex space-x-3 justify-center">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-200"
           >
             {cancelText}
           </button>
@@ -210,10 +210,10 @@ export const YouTubePermissionModal = ({
           This will open the video lecture in YouTube. You'll be redirected to YouTube in a new tab.
         </p>
         
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 dark:bg-yellow-500/10 rounded-lg p-4 mb-6">
           <div className="flex items-start space-x-3">
-            <span className="text-blue-500 text-lg">💡</span>
-            <p className="text-sm text-blue-700 dark:text-blue-300 text-left">
+            <span className="text-yellow-500 text-lg">💡</span>
+            <p className="text-sm text-blue-700 dark:text-yellow-400 text-left">
               <strong>Tip:</strong> For the best learning experience, we recommend taking notes while watching the video and completing the practice questions afterward.
             </p>
           </div>
@@ -222,7 +222,7 @@ export const YouTubePermissionModal = ({
         <div className="flex space-x-3 justify-center">
           <button
             onClick={onClose}
-            className="px-6 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
+            className="px-6 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-200"
           >
             Cancel
           </button>

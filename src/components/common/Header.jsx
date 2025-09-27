@@ -36,14 +36,14 @@ const Header = () => {
   return (
     <header className={`sticky top-0 z-50 ${
       darkMode 
-        ? 'bg-gray-900/95 backdrop-blur border-gray-700' 
+        ? 'bg-black/95 backdrop-blur border-zinc-900' 
         : 'bg-white/95 backdrop-blur border-gray-200'
     } border-b`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-blue-500/20 hover:border-blue-500/40 transition-colors">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
               <img
                 src="/logo_arya.jpg"
                 alt="Arya Pathshala Logo"
@@ -52,7 +52,7 @@ const Header = () => {
             </div>
             <div className="min-w-0">
               <h1 className={`text-lg sm:text-xl font-bold truncate ${
-                darkMode ? 'text-white' : 'text-gray-900'
+                darkMode ? 'text-yellow-400' : 'text-gray-900'
               }`}>
                 <span className="hidden xs:inline">Arya Pathshala</span>
                 <span className="xs:hidden">Arya Pathshala</span>
@@ -70,9 +70,9 @@ const Header = () => {
                   to={link.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors font-medium whitespace-nowrap ${
                     isActive(link.path)
-                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                      ? 'bg-yellow-500/20 text-yellow-400 dark:bg-yellow-500/20 dark:text-yellow-400'
                       : darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -100,7 +100,7 @@ const Header = () => {
                   }}
                   className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-colors text-sm sm:text-base ${
                     darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -114,7 +114,7 @@ const Header = () => {
                   to="/student/login"
                   className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-colors text-sm sm:text-base ${
                     darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -125,7 +125,7 @@ const Header = () => {
                   to="/student/signup"
                   className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-colors text-sm sm:text-base ${
                     darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                      ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -140,7 +140,7 @@ const Header = () => {
               onClick={toggleDarkMode}
               className={`p-2 rounded-lg transition-colors ${
                 darkMode 
-                  ? 'text-yellow-400 hover:bg-gray-800' 
+                  ? 'text-yellow-400 hover:bg-zinc-900' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
               aria-label="Toggle dark mode"
@@ -153,7 +153,7 @@ const Header = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`lg:hidden p-2 rounded-lg transition-colors ${
                 darkMode 
-                  ? 'text-gray-300 hover:bg-gray-800' 
+                  ? 'text-gray-300 hover:bg-zinc-900' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
               aria-label="Toggle menu"
@@ -166,7 +166,7 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className={`lg:hidden py-4 border-t ${
-            darkMode ? 'border-gray-700' : 'border-gray-200'
+            darkMode ? 'border-zinc-900' : 'border-gray-200'
           }`}>
             <nav className="space-y-1 sm:space-y-2">
               {navLinks.map((link) => {
@@ -178,9 +178,9 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium ${
                       isActive(link.path)
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                        ? 'bg-yellow-500/20 text-yellow-400 dark:bg-yellow-500/20 dark:text-yellow-400'
                         : darkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                        ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                         : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
@@ -207,7 +207,7 @@ const Header = () => {
                       }}
                       className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium w-full text-left ${
                         darkMode
-                          ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                          ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                           : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                       }`}
                     >
@@ -222,7 +222,7 @@ const Header = () => {
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium ${
                         darkMode
-                          ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                          ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                           : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                       }`}
                     >
@@ -234,7 +234,7 @@ const Header = () => {
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors font-medium ${
                         darkMode
-                          ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                          ? 'text-gray-300 hover:text-yellow-400 hover:bg-zinc-900'
                           : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                       }`}
                     >

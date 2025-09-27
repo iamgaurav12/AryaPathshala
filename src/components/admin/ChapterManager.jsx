@@ -113,14 +113,12 @@ const ChapterManager = ({
     <div className="mb-4">
       <label
         htmlFor={field}
-        className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}
+        className="block text-sm font-medium mb-2 text-gray-300"
       >
         <div className="flex items-center space-x-2">
-          {Icon && <Icon className="h-4 w-4" />}
+          {Icon && <Icon className="h-4 w-4 text-yellow-400" />}
           <span>{label}</span>
-          {required && <span className="text-red-500">*</span>}
+          {required && <span className="text-red-400">*</span>}
         </div>
       </label>
 
@@ -140,12 +138,10 @@ const ChapterManager = ({
           }}
           placeholder={placeholder}
           rows={3}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-400 transition-all duration-300 bg-gray-900 text-white placeholder-gray-500 ${
             errors[field]
               ? 'border-red-500'
-              : darkMode
-              ? 'border-gray-600 bg-gray-700 text-white'
-              : 'border-gray-300 bg-white text-gray-900'
+              : 'border-gray-700 hover:border-gray-600'
           }`}
         />
       ) : type === 'select' ? (
@@ -162,12 +158,10 @@ const ChapterManager = ({
               setErrors(prev => ({ ...prev, [field]: '' }));
             }
           }}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-400 transition-all duration-300 bg-gray-900 text-white ${
             errors[field]
               ? 'border-red-500'
-              : darkMode
-              ? 'border-gray-600 bg-gray-700 text-white'
-              : 'border-gray-300 bg-white text-gray-900'
+              : 'border-gray-700 hover:border-gray-600'
           }`}
         >
           <option value="Mathematics">Mathematics</option>
@@ -192,18 +186,16 @@ const ChapterManager = ({
             }
           }}
           placeholder={placeholder}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-400 transition-all duration-300 bg-gray-900 text-white placeholder-gray-500 ${
             errors[field]
               ? 'border-red-500'
-              : darkMode
-              ? 'border-gray-600 bg-gray-700 text-white'
-              : 'border-gray-300 bg-white text-gray-900'
+              : 'border-gray-700 hover:border-gray-600'
           }`}
         />
       )}
 
       {errors[field] && (
-        <p className="mt-1 text-sm text-red-500">{errors[field]}</p>
+        <p className="mt-1 text-sm text-red-400 bg-red-900/20 px-2 py-1 rounded">{errors[field]}</p>
       )}
     </div>
   );
@@ -212,13 +204,11 @@ const ChapterManager = ({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <h2 className="text-2xl font-bold text-white">{title}</h2>
         <button
           type="button"
           onClick={onCancel}
-          className={`p-2 rounded-lg transition-colors ${
-            darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
-          }`}
+          className="p-2 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>
@@ -273,7 +263,7 @@ const ChapterManager = ({
         />
 
         {/* Active Status */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 p-4 bg-gray-900/50 rounded-lg border border-gray-800">
           <input
             id="isActive"
             type="checkbox"
@@ -281,28 +271,22 @@ const ChapterManager = ({
             onChange={(e) =>
               handleInputChange('isActive', e.target.checked)
             }
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-600 rounded bg-gray-800 accent-yellow-500"
           />
           <label
             htmlFor="isActive"
-            className={`text-sm font-medium ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
-            }`}
+            className="text-sm font-medium text-gray-300"
           >
             Chapter is active (visible to students)
           </label>
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-800">
           <button
             type="button"
             onClick={onCancel}
-            className={`px-4 py-2 border rounded-lg font-medium transition-colors ${
-              darkMode
-                ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
+            className="px-4 py-2 border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg font-medium transition-all duration-300"
             disabled={saving}
           >
             Cancel
@@ -311,7 +295,7 @@ const ChapterManager = ({
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-sm hover:shadow"
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-lg hover:from-yellow-400 hover:to-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50"
           >
             <Save className="h-4 w-4" />
             <span>{saving ? 'Saving...' : 'Save Chapter'}</span>
