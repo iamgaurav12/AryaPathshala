@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, FileText, Video, BookOpen, ExternalLink, AlertCircle, CheckCircle, Clock, Target } from 'lucide-react';
 
-const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
+const ResourcePanel = ({ chapter, onClose = false }) => {
   const [loadingResource, setLoadingResource] = useState(null);
 
   const cleanUrl = (val) => val?.trim().replace(/^ahttps/, 'https');
@@ -57,13 +57,6 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
     </div>
   );
 
-  const examTips = [
-    "Focus on understanding concepts, not just memorizing.",
-    "Practice previous year question papers regularly.",
-    "Make concise notes for quick last-minute revision.",
-    "Solve DPPs daily to reinforce your learning."
-  ];
-
   return (
     <div className="bg-black shadow-xl border border-gray-800 rounded-lg p-6 text-white">
       <div className="flex items-center justify-between mb-6">
@@ -89,17 +82,6 @@ const ResourcePanel = ({ chapter, onClose, showExamTips = false }) => {
           <ResourceCard title="Video Lecture" description="Detailed video explanations" url={chapter.lectureLink} icon={Video} type="lecture" isAvailable={!!chapter.lectureLink} />
         </div>
       </div>
-
-      {showExamTips && (
-        <div className="p-4 rounded-lg border-l-4 mb-6 border-yellow-500 bg-yellow-500/10">
-          <h4 className="font-semibold mb-3 flex items-center space-x-2 text-yellow-400"><Target className="h-5 w-5" /><span>Board Exam Tips</span></h4>
-          <ul className="space-y-2 text-sm text-gray-300">
-            {examTips.map((tip, index) => (
-              <li key={index} className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-yellow-400" /><span>{tip}</span></li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <div className="mt-6 pt-4 border-t border-gray-800">
         <div className="flex items-center justify-between text-sm text-gray-500">
